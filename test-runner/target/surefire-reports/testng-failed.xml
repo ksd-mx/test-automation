@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Suite_1234]" guice-stage="DEVELOPMENT" verbose="0">
+  <test thread-count="5" name="TestingNewRunner(failed)" verbose="0">
+    <classes>
+      <class name="test.java.com.laboratory.test.LaboratoryTest">
+        <methods>
+          <include name="shouldFailSummingTwoNumbers"/>
+        </methods>
+      </class> <!-- test.java.com.laboratory.test.LaboratoryTest -->
+    </classes>
+  </test> <!-- TestingNewRunner(failed) -->
+</suite> <!-- Failed suite [Suite_1234] -->

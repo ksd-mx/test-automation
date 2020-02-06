@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite_1234" verbose="1">
+    <test name="TestingNewRunner">
+        <classes>
+            <class name="test.java.com.laboratory.test.LaboratoryTest" />
+        </classes>
+    </test>
+</suite>
