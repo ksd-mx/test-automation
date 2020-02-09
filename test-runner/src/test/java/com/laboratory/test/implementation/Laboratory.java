@@ -1,8 +1,5 @@
-package main.java.com.laboratory;
+package test.java.com.laboratory.test.implementation;
 
-/**
- * A class for experimenting with TestNG and Azure Integration
- */
 public class Laboratory {
 
     public int sumTwoNumbers(int first, int second) {
