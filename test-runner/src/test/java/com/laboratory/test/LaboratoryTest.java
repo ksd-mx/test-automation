@@ -16,7 +16,7 @@ public class LaboratoryTest extends AutomatedTest {
     @Override
     public String getTestName() { return "Laboratory"; }
 
-    @Test()
+    @Test(testName = "Id")
     public void shouldPassSummingTwoNumbers() {
         Assert.assertTrue(laboratory.sumTwoNumbers(1, 1) == 2, "Something went wrong!");
     }

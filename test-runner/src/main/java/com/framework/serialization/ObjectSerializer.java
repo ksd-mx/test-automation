@@ -1,4 +1,4 @@
-package main.java.com.framework.configuration.serialization;
+package main.java.com.framework.serialization;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.IOException;
 
-public class ConfigurationSettingsSerializer {
+public class ObjectSerializer {
     public <T> T ReadSettingsFromFile(String filename) throws IOException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
