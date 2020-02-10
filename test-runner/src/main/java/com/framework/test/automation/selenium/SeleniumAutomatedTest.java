@@ -12,14 +12,14 @@ public abstract class SeleniumAutomatedTest extends AutomatedTest {
     public void beforeClass(ITestContext testContext) {
         System.out.println(":: Before Class " + testContext.getName());
 
-        WebDriverManager.getCurrent().startWebDriver();
+        // WebDriverManager.getCurrent().startWebDriver();
     }
 
     @Override
     public void afterClass(ITestContext testContext) {
         System.out.println(":: After Class " + testContext.getName());
 
-        WebDriverManager.getCurrent().stopWebDriver();
+        // WebDriverManager.getCurrent().stopWebDriver();
     }
 
     @Override

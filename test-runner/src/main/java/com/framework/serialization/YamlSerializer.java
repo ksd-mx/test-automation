@@ -1,20 +1,19 @@
-package main.java.com.framework.test.model.serialization;
+package main.java.com.framework.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import main.java.com.framework.test.model.TestRun;
 
 import java.io.File;
 import java.io.IOException;
 
-public class TestRunSerializer {
-    public static TestRun ReadSettingsFromFile(String filename) throws IOException {
+public class YamlSerializer {
+    public static Object ReadSettingsFromFile(Class type, String filename) throws IOException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-        return mapper.readValue(new File(filename), TestRun.class);
+        return mapper.readValue(new File(filename), type);
     }
 
-    public static void WriteSettingsToFile(String filename, TestRun value) throws IOException {
+    public static void WriteSettingsToFile(Class value, String filename) throws IOException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
         mapper.findAndRegisterModules();
