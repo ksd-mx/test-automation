@@ -1,6 +1,5 @@
 package main.java.com.framework.test.automation.selenium;
 
-import org.apache.commons.exec.ExecuteException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,6 +13,7 @@ public class DriverFactory {
 
         switch (driverType) {
             case CHROME:
+                System.setProperty("webdriver.chrome.driver", "src//main//resources//chromedriver");
                 DesiredCapabilities dr = DesiredCapabilities.chrome();
                 ChromeOptions options = new ChromeOptions();
                 options.addArguments(
@@ -28,11 +28,10 @@ public class DriverFactory {
                 dr.setJavascriptEnabled(true);
                 options.merge(dr);
                 result = new ChromeDriver(options);
-
                 break;
             case FIREFOX:
+                System.setProperty("webdriver.gecko.driver", "src//main//resources//geckodriver.exe");
                 result = new FirefoxDriver();
-
                 break;
             default:
                 throw new WebDriverException("Invalid Web Driver Type Configuration");

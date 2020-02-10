@@ -1,11 +1,11 @@
 package test.java.com.laboratory.test;
 
-import main.java.com.framework.test.automation.*;
+import main.java.com.framework.test.automation.selenium.SeleniumAutomatedTest;
 import test.java.com.laboratory.test.implementation.Laboratory;
 import org.testng.annotations.*;
 import org.testng.Assert;
 
-public class LaboratoryTest extends AutomatedTest {
+public class LaboratoryTest extends SeleniumAutomatedTest {
 
     @Test()
     public void shouldPassSummingTwoNumbers() {

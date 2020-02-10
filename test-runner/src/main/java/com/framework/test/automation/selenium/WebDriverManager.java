@@ -11,15 +11,7 @@ public class WebDriverManager {
     private final WebDriver driver;
 
     private WebDriverManager(DriverFactory.DriverType driverType) {
-        driver = DriverFactory.createDriver(driverType);
-
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
-    }
-
-    public WebDriver getDriver() {
-        return driver;
+        this.driver = DriverFactory.createDriver(driverType);
     }
 
     public static WebDriverManager getCurrent() {
@@ -35,5 +27,20 @@ public class WebDriverManager {
         }
 
         return WebDriverManager.current;
+    }
+
+    public WebDriver getDriver() {
+        return this.driver;
+    }
+
+    public void startWebDriver() {
+        this.driver.manage().window().maximize();
+        this.driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+        this.driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+    }
+
+    public void stopWebDriver() {
+        this.driver.close();
+        this.driver.quit();
     }
 }
