@@ -1,0 +1,22 @@
+---
+start: null
+finish: null
+testCaseList:
+- id: 1
+  name: "Testando 1"
+  result: null
+  start: null
+  finish: null
+  testStepList: []
+- id: 2
+  name: "Testando 2"
+  result: null
+  start: null
+  finish: null
+  testStepList: []
+- id: 3
+  name: "Testando 3"
+  result: null
+  start: null
+  finish: null
+  testStepList: []

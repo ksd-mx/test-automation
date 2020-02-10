@@ -15,10 +15,4 @@ public class EnvironmentContext {
 
         return value;
     }
-
-    public static Stream getScreenshot(IScreenshotProvider provider) {
-
-        return provider.getScrenshot();
-
-    }
 }

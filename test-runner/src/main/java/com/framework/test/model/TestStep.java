@@ -1,9 +1,13 @@
 package main.java.com.framework.test.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-public final class TestStep {
+public class TestStep {
+    private int id;
     private String action;
     private String expectation;
     private String outcome;
@@ -14,6 +18,10 @@ public final class TestStep {
     private LocalDateTime start;
     private LocalDateTime finish;
     private List<InputData> inputDataList;
+
+    public TestStep() {
+        this.inputDataList = new ArrayList<>();
+    }
 
     public String getAction() { return this.action; }
     public void setAction(String value) { this.action = value; }

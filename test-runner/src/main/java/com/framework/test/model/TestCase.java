@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TestCase {
+public class TestCase {
+    private int id;
     private String name;
     private Result result;
     private LocalDateTime start;
@@ -12,8 +13,18 @@ public final class TestCase {
     private List<TestStep> testStepList;
 
     public TestCase() {
-        this.testStepList = new ArrayList<TestStep>();
+        this.testStepList = new ArrayList<>();
     }
+
+    public TestCase(int id, String name) {
+        this();
+
+        this.setId(id);
+        this.setName(name);
+    }
+
+    public int getId() { return this.id; }
+    public void setId(int value) { this.id = value; }
 
     public String getName() { return this.name; }
     public void setName(String value) { this.name = value; }

@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TestRun {
+public class TestRun {
     private LocalDateTime start;
     private LocalDateTime finish;
     private List<TestCase> testCaseList;
 
     public TestRun() {
-        this.testCaseList = new ArrayList<TestCase>();
+        this.testCaseList = new ArrayList<>();
     }
 
     public LocalDateTime getStart() { return this.start; }
