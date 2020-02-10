@@ -1,15 +1,12 @@
 package main.java.com.framework.test;
 
-import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 
-public abstract class BaseTestClass implements ITest {
-
-    public abstract String getTestName();
+public abstract class BaseTestClass {
 
     public abstract void beforeClass(ITestContext testContext);
 

@@ -22,4 +22,8 @@ public class RunContext {
         return RunContext.current;
     }
 
+    public TestRun getCurrentTestRun() {
+        return this.run;
+    }
+
 }
