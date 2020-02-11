@@ -6,5 +6,5 @@
     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
     <aop:aspectj-autoproxy />
-    <bean id="testStepAuditAspect" class="main.java.com.framework.test.aspects.TestStepAuditAspect" />
+    <bean id="TestStepAuditAspect" class="main.java.com.framework.test.aspects.TestStepAuditAspect" />
 </beans>

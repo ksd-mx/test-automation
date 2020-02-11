@@ -13,13 +13,17 @@ public class TestStepAuditAspect {
 
     @Around("@annotation(Step)")
     public Object registerTestStepAudit(ProceedingJoinPoint jointPoint) throws Throwable {
+        System.out.println("#################### Executing aspect for test steps");
+
         TestStep step = this.getTestStepFromJoinPoint(jointPoint);
 
-        step.setStart(LocalDateTime.now());
+        step.setStart(LocalDateTime.now().toString());
 
         Object result = jointPoint.proceed();
 
-        step.setFinish(LocalDateTime.now());
+        step.setFinish(LocalDateTime.now().toString());
+
+        RunContext.getCurrent().save();
 
         return result;
     }
@@ -32,16 +36,16 @@ public class TestStepAuditAspect {
         TestStep thisStep = null;
 
         for (TestCase tc : RunContext.getCurrent().getCurrentTestRun().getTestCaseList()) {
+            System.out.println(String.format("TC ID: %s", tc.getId()));
             if (tc.getId() == stepAnnotation.testCaseId()) {
                 for (TestStep step : tc.getTestStepList()) {
-                    if (step.getAction() == stepAnnotation.actionPath()) {
-                        thisStep = step;
+                    System.out.println(String.format("TS ID: %s", step.getAction()));
+                    System.out.println(String.format("SA ID: %s", stepAnnotation.actionPath()));
+                    if (step.getAction() .equals(stepAnnotation.actionPath())) {
+                        System.out.println(String.format("ACHEI ID: %s", step.getAction()));
+                        return step;
                     }
-                    break;
                 }
-            }
-            if (thisStep != null) {
-                break;
             }
         }
 

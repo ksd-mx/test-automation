@@ -1,26 +1,45 @@
 package main.java.com.framework.test.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestStep {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private int id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String action;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String expectation;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String outcome;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String comment;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String errorMessage;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String screenshotImagePath;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Result result;
-    private LocalDateTime start;
-    private LocalDateTime finish;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String start;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String finish;
+
     private List<InputData> inputDataList;
 
     public TestStep() {
         this.inputDataList = new ArrayList<>();
+    }
+
+    public TestStep(String action, String outcome, String expectation) {
+        this();
+
+        this.setAction(action);
+        this.setOutcome(outcome);
+        this.setExpectation(expectation);
     }
 
     public String getAction() { return this.action; }
@@ -44,11 +63,11 @@ public class TestStep {
     public Result getResult() { return this.result; }
     public void setResult(Result value) { this.result = value; }
 
-    public LocalDateTime getStart() { return this.start; }
-    public void setStart(LocalDateTime value) { this.start = value; }
+    public String getStart() { return this.start; }
+    public void setStart(String value) { this.start = value; }
 
-    public LocalDateTime getFinish() { return this.finish; }
-    public void setFinish(LocalDateTime value) { this.finish = value; }
+    public String getFinish() { return this.finish; }
+    public void setFinish(String value) { this.finish = value; }
 
     public List<InputData> getInputDataList() { return this.inputDataList; }
     protected void setInputDataList(List<InputData> value) { this.inputDataList = value; }

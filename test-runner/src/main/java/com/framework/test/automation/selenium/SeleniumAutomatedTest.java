@@ -8,6 +8,9 @@ import org.testng.ITestResult;
 import java.lang.reflect.Method;
 
 public abstract class SeleniumAutomatedTest extends AutomatedTest {
+    public SeleniumAutomatedTest() {
+    }
+
     @Override
     public void beforeClass(ITestContext testContext) {
         System.out.println(":: Before Class " + testContext.getName());
