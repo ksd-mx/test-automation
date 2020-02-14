@@ -22,22 +22,22 @@ public class LaboratoryTest extends DefaultTestImpl {
         Assert.assertFalse(new Laboratory().sumTwoNumbersFail(1, 1) == 2, "Something went wrong!");
     }
 
-    @Step(testCaseId = 1, actionPath = "000000a", screenshotBefore = true, screenshotAfter = true)
+    @Step(testCaseId = "1", actionPath = "000000a", screenshotBefore = true, screenshotAfter = true)
     public void someTestStep01() {
         System.out.println("Step 1");
     }
 
-    @Step(testCaseId = 1, actionPath = "000000b", screenshotBefore = true, screenshotAfter = true)
+    @Step(testCaseId = "1", actionPath = "000000b", screenshotBefore = true, screenshotAfter = true)
     public void someTestStep02() {
         System.out.println("Step 2");
     }
 
-    @Step(testCaseId = 2, actionPath = "000000a", screenshotBefore = true, screenshotAfter = true)
+    @Step(testCaseId = "2", actionPath = "000000a", screenshotBefore = true, screenshotAfter = true)
     public void someTestStep03() {
         System.out.println("Step 1");
     }
 
-    @Step(testCaseId = 2, actionPath = "000000b", screenshotBefore = true, screenshotAfter = true)
+    @Step(testCaseId = "2", actionPath = "000000b", screenshotBefore = true, screenshotAfter = true)
     public void someTestStep04() {
         System.out.println("Step 2");
     }

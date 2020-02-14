@@ -15,17 +15,16 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Aspect
 public class TestStepAuditAspect {
 
-    private TestRun currentTestRun;
+    private TestPlan currentTestPlan;
 
     private IProvider screenshotProvider;
 
     public TestStepAuditAspect() {
-        this.currentTestRun = RunContext.getCurrent().getCurrentTestRun();
+        this.currentTestPlan = RunContext.getCurrent().getCurrentTestRun();
         this.screenshotProvider = new ScreenshotProvider();
     }
 
@@ -36,51 +35,45 @@ public class TestStepAuditAspect {
     @Around("@annotation(Step) && execution(* *(..))")
     public void registerTestStepAudit(ProceedingJoinPoint jointPoint) throws Throwable {
 
-        TestStep step = this.getTestStepFromJoinPoint(jointPoint);
+        Step stepAnnotation = this.getTestStepAnnotation(jointPoint);
 
-        String scrBefFn = String.format("SCREENSHOT_BEFORE_%s_%s.png", step.getTestCaseId(), step.getAction());
-        String scrAftFn = String.format("SCREENSHOT_AFTER_%s_%s.png", step.getTestCaseId(), step.getAction());
+        TestStep step = this.getTestStepFromStep(stepAnnotation);
 
-        step.getScreenshotList().add(this.TakeScreenshot(step, scrBefFn));
+        String scrBefFn = String.format("SCREENSHOT_BEFORE_%s_%s.png", step.getTestCaseId(), step.getActionPath());
+        String scrAftFn = String.format("SCREENSHOT_AFTER_%s_%s.png", step.getTestCaseId(), step.getActionPath());
+
+        if (stepAnnotation.screenshotBefore()) this.TakeScreenshot(step, scrBefFn);
         step.setStart(LocalDateTime.now().toString());
 
         jointPoint.proceed();
 
         step.setFinish(LocalDateTime.now().toString());
-        step.getScreenshotList().add(this.TakeScreenshot(step, scrAftFn));
-
-        System.out.println(String.format("### Adding screenshot to Step %s of Test Case %s", step.getAction(), step.getTestCaseId()));
+        if (stepAnnotation.screenshotAfter()) this.TakeScreenshot(step, scrAftFn);
     }
 
-    private String TakeScreenshot(TestStep step, String filename) throws Throwable {
+    private void TakeScreenshot(TestStep step, String filename) throws Throwable {
         Path finalPath =
                 Paths.get(
                         ConfigurationManager.getCurrent().getApplicationSettings().getResultPath(),
                         String.valueOf(step.getTestCaseId()),
-                        step.getAction(),
+                        step.getActionPath(),
                         filename);
 
         File screenshotFile = new File(finalPath.toString());
 
         FileUtils.moveFile(this.screenshotProvider.provide(), screenshotFile);
 
-        return finalPath.toString();
+        step.getScreenshotList().add(finalPath.toString());
     }
 
-    private TestStep getTestStepFromJoinPoint(ProceedingJoinPoint jointPoint) {
+    private TestStep getTestStepFromStep(Step stepAnnotation) {
         TestStep thisStep = null;
 
-        MethodSignature methodSignature = (MethodSignature) jointPoint.getSignature();
-
-        Method method = methodSignature.getMethod();
-
-        Step stepAnnotation = method.getAnnotation(Step.class);
-
-        for (TestCase tc : this.currentTestRun.getTestCaseList()) {
-            if (tc.getId() == stepAnnotation.testCaseId()) {
+        for (TestCase tc : this.currentTestPlan.getTestCaseList()) {
+            if (tc.getExternalId().equals(stepAnnotation.testCaseId())) {
                 for (TestStep step : tc.getTestStepList()) {
-                    if (step.getAction().equals(stepAnnotation.actionPath())) {
-                        step.setTestCaseId(tc.getId());
+                    if (step.getActionPath().equals(stepAnnotation.actionPath())) {
+                        step.setTestCaseId(tc.getExternalId());
                         return step;
                     }
                 }
@@ -90,5 +83,13 @@ public class TestStepAuditAspect {
         if (thisStep == null) throw new NullPointerException("A step with ActionPath (%s) was not found.");
 
         return thisStep;
+    }
+
+    private Step getTestStepAnnotation(ProceedingJoinPoint jointPoint) {
+        MethodSignature methodSignature = (MethodSignature) jointPoint.getSignature();
+
+        Method method = methodSignature.getMethod();
+
+        return method.getAnnotation(Step.class);
     }
 }

@@ -1,0 +1,6 @@
+---
+targetApplicationLoginUrl: ""
+resultPath: "target//automated-test-results//"
+testRunResultFileName: "results.json"
+defaultSeleniumDriverType: "CHROME"
+defaultSerializationDataType: "JSON"

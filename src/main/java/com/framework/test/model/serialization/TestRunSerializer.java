@@ -3,7 +3,7 @@ package main.java.com.framework.test.model.serialization;
 import main.java.com.framework.configuration.model.ApplicationSettings;
 import main.java.com.framework.configuration.ConfigurationManager;
 import main.java.com.framework.serialization.ObjectSerializer;
-import main.java.com.framework.test.model.TestRun;
+import main.java.com.framework.test.model.TestPlan;
 
 import java.io.IOException;
 
@@ -21,11 +21,11 @@ public class TestRunSerializer {
         this.objectSerializer = ObjectSerializer.createSerializer(format);
     }
 
-    public TestRun retrieve(String fileName, boolean create) {
-        TestRun result = TestRun.createMock();
+    public TestPlan retrieve(String fileName, boolean create) {
+        TestPlan result = TestPlan.createMock();
 
         try {
-            result = (TestRun) this.objectSerializer
+            result = (TestPlan) this.objectSerializer
                     .ReadSettingsFromFile(
                             ApplicationSettings.class,
                             fileName);
@@ -41,12 +41,10 @@ public class TestRunSerializer {
         }
     }
 
-    public void save(TestRun testRun, String filename) throws Throwable {
+    public void save(TestPlan testPlan, String filename) throws Throwable {
         this.objectSerializer
                 .WriteSettingsToFile(
-                        testRun,
+                        testPlan,
                         filename);
-
-        System.out.println(String.format("Results written to %s", filename));
     }
 }

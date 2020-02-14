@@ -1,5 +1,6 @@
 package main.java.com.framework.configuration.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import main.java.com.framework.serialization.ObjectSerializer;
 import main.java.com.framework.test.selenium.DriverFactory;
 
@@ -13,7 +14,7 @@ public class ApplicationSettings {
 
     private String testRunResultFileName;
 
-    public DriverFactory.DriverType defaultSeleniumDriverType;
+    private DriverFactory.DriverType defaultSeleniumDriverType;
 
     private ObjectSerializer.DataFormat defaultSerializationDataType;
 
@@ -34,6 +35,7 @@ public class ApplicationSettings {
     public String getTestRunResultFileName() { return this.testRunResultFileName; }
     public void setTestRunResultFileName(String value) { this.testRunResultFileName = value; }
 
+    @JsonIgnore
     public String getTestRunResultFilePath() { return Paths.get(this.resultPath, this.testRunResultFileName).toString(); }
 
     public DriverFactory.DriverType getDefaultSeleniumDriverType() { return this.defaultSeleniumDriverType; }

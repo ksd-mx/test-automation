@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Step {
 
-    int testCaseId();
+    String testCaseId();
 
     String actionPath();
 
