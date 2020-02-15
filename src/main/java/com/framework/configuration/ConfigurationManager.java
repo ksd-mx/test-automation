@@ -1,7 +1,9 @@
 package main.java.com.framework.configuration;
 
 import main.java.com.framework.configuration.model.ApplicationSettings;
+import main.java.com.framework.configuration.model.FieldSettings;
 import main.java.com.framework.configuration.model.serialization.ApplicationSettingsSerializer;
+import main.java.com.framework.configuration.model.serialization.FieldSettingsSerializer;
 import main.java.com.framework.serialization.*;
 import main.java.com.framework.test.model.TestPlan;
 import main.java.com.framework.test.model.serialization.TestRunSerializer;
@@ -9,18 +11,22 @@ import main.java.com.framework.test.model.serialization.TestRunSerializer;
 public final class ConfigurationManager {
 
     public static final String APPLICATION_SETTINGS_FILEPATH = "applicationsettings.yml";
+    public static final String FIELD_SETTINGS_FILEPATH = "fieldsettings.yml";
     public static final String TESTRUN_SETTINGS_FILEPATH = "testrun.json";
 
     private static ConfigurationManager current;
 
     private ApplicationSettings applicationSettings;
+    private FieldSettings fieldSettings;
     private TestPlan testPlanSettings;
 
     private ConfigurationManager() {
         ApplicationSettingsSerializer applicationSettingsSerializer = new ApplicationSettingsSerializer(ObjectSerializer.DataFormat.YAML);
+        FieldSettingsSerializer fieldSettingsSerializer = new FieldSettingsSerializer(ObjectSerializer.DataFormat.YAML);
         TestRunSerializer testRunSerializer = new TestRunSerializer(ObjectSerializer.DataFormat.JSON);
 
         this.applicationSettings = applicationSettingsSerializer.retrieve(APPLICATION_SETTINGS_FILEPATH, true);
+        this.fieldSettings = fieldSettingsSerializer.retrieve(FIELD_SETTINGS_FILEPATH, true);
         this.testPlanSettings = testRunSerializer.retrieve(TESTRUN_SETTINGS_FILEPATH, true);
     }
 
@@ -37,6 +43,10 @@ public final class ConfigurationManager {
 
     public TestPlan getTestPlanSettings() {
         return this.testPlanSettings;
+    }
+
+    public FieldSettings getFieldSettings() {
+        return this.fieldSettings;
     }
 
 }

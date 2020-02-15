@@ -2,7 +2,7 @@ package test.java.com.laboratory.test;
 
 import main.java.com.framework.test.Step;
 import test.java.com.laboratory.test.implementation.DefaultTestImpl;
-import test.java.com.laboratory.test.implementation.Laboratory;
+import test.java.com.laboratory.test.implementation.testcases.Laboratory.Laboratory;
 import org.testng.annotations.*;
 import org.testng.Assert;
 
@@ -12,14 +12,14 @@ public class LaboratoryTest extends DefaultTestImpl {
     public void shouldPassSummingTwoNumbers() {
         this.someTestStep01();
         this.someTestStep02();
-        Assert.assertTrue(new Laboratory().sumTwoNumbers(1, 1) == 2, "Something went wrong!");
+        Assert.assertEquals(new Laboratory().sumTwoNumbers(1, 1), 2, "Something went wrong!");
     }
 
     @Test()
     public void shouldFailSummingTwoNumbers() {
         this.someTestStep03();
         this.someTestStep04();
-        Assert.assertFalse(new Laboratory().sumTwoNumbersFail(1, 1) == 2, "Something went wrong!");
+        Assert.assertNotEquals(new Laboratory().sumTwoNumbersFail(1, 1), 2, "Something went wrong!");
     }
 
     @Step(testCaseId = "1", actionPath = "000000a", screenshotBefore = true, screenshotAfter = true)

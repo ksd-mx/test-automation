@@ -1,14 +1,13 @@
 package main.java.com.framework.logging;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class LoggingManager {
+public final class LoggingManager {
     private final LogManager logManager;
     private final Logger logger;
 

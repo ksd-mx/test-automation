@@ -3,7 +3,6 @@ package main.java.com.framework.test.aspects;
 import main.java.com.framework.component.IProvider;
 import main.java.com.framework.configuration.ConfigurationManager;
 import main.java.com.framework.graphics.ScreenshotProvider;
-import main.java.com.framework.logging.LoggingManager;
 import main.java.com.framework.test.*;
 import main.java.com.framework.test.model.*;
 import org.apache.commons.io.FileUtils;
@@ -16,7 +15,6 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.logging.*;
 
 @Aspect
 public class TestStepAuditAspect {
@@ -68,8 +66,6 @@ public class TestStepAuditAspect {
     }
 
     private TestStep getTestStepFromStep(Step stepAnnotation) {
-        TestStep thisStep = null;
-
         for (TestCase tc : this.currentTestPlan.getTestCaseList()) {
             if (tc.getExternalId().equals(stepAnnotation.testCaseId())) {
                 for (TestStep step : tc.getTestStepList()) {

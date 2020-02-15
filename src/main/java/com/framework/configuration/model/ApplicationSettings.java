@@ -8,8 +8,6 @@ import java.nio.file.Paths;
 
 public class ApplicationSettings {
 
-    private String targetApplicationLoginUrl;
-
     private String resultPath;
 
     private String testRunResultFileName;
@@ -19,15 +17,11 @@ public class ApplicationSettings {
     private ObjectSerializer.DataFormat defaultSerializationDataType;
 
     public ApplicationSettings() {
-        this.targetApplicationLoginUrl = "";
         this.resultPath = "target//automated-test-results//";
         this.testRunResultFileName = "results.json";
         this.defaultSeleniumDriverType = DriverFactory.DriverType.CHROME;
         this.defaultSerializationDataType = ObjectSerializer.DataFormat.JSON;
     }
-
-    public String getTargetApplicationLoginUrl() { return this.targetApplicationLoginUrl; }
-    public void setTargetApplicationLoginUrl(String value) { this.targetApplicationLoginUrl = value; }
 
     public String getResultPath() { return this.resultPath; }
     public void setResultPath(String value) { this.resultPath = value; }

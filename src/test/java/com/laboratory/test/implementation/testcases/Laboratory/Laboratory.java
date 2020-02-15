@@ -1,4 +1,4 @@
-package test.java.com.laboratory.test.implementation;
+package test.java.com.laboratory.test.implementation.testcases.Laboratory;
 
 public class Laboratory {
 
