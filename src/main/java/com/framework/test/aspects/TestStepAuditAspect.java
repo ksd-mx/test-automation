@@ -3,6 +3,7 @@ package main.java.com.framework.test.aspects;
 import main.java.com.framework.component.IProvider;
 import main.java.com.framework.configuration.ConfigurationManager;
 import main.java.com.framework.graphics.ScreenshotProvider;
+import main.java.com.framework.logging.LoggingManager;
 import main.java.com.framework.test.*;
 import main.java.com.framework.test.model.*;
 import org.apache.commons.io.FileUtils;
@@ -15,6 +16,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.logging.*;
 
 @Aspect
 public class TestStepAuditAspect {
@@ -34,7 +36,6 @@ public class TestStepAuditAspect {
      * */
     @Around("@annotation(Step) && execution(* *(..))")
     public void registerTestStepAudit(ProceedingJoinPoint jointPoint) throws Throwable {
-
         Step stepAnnotation = this.getTestStepAnnotation(jointPoint);
 
         TestStep step = this.getTestStepFromStep(stepAnnotation);
@@ -80,9 +81,7 @@ public class TestStepAuditAspect {
             }
         }
 
-        if (thisStep == null) throw new NullPointerException("A step with ActionPath (%s) was not found.");
-
-        return thisStep;
+        throw new NullPointerException("A step with ActionPath (%s) was not found.");
     }
 
     private Step getTestStepAnnotation(ProceedingJoinPoint jointPoint) {
