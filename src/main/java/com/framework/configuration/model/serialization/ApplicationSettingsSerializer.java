@@ -1,20 +1,12 @@
 package main.java.com.framework.configuration.model.serialization;
 
 import main.java.com.framework.configuration.model.ApplicationSettings;
-import main.java.com.framework.configuration.ConfigurationManager;
 import main.java.com.framework.serialization.ObjectSerializer;
 
 import java.io.IOException;
 
 public class ApplicationSettingsSerializer {
     private final ObjectSerializer objectSerializer;
-
-    public ApplicationSettingsSerializer() {
-        this(ConfigurationManager
-                .getCurrent()
-                .getApplicationSettings()
-                .getDefaultSerializationDataType());
-    }
 
     public ApplicationSettingsSerializer(ObjectSerializer.DataFormat format) {
         this.objectSerializer = ObjectSerializer.createSerializer(format);

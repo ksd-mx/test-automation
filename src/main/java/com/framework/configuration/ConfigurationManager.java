@@ -4,49 +4,48 @@ import main.java.com.framework.configuration.model.ApplicationSettings;
 import main.java.com.framework.configuration.model.FieldSettings;
 import main.java.com.framework.configuration.model.serialization.ApplicationSettingsSerializer;
 import main.java.com.framework.configuration.model.serialization.FieldSettingsSerializer;
-import main.java.com.framework.serialization.*;
-import main.java.com.framework.test.model.TestPlan;
-import main.java.com.framework.test.model.serialization.TestRunSerializer;
 
 public final class ConfigurationManager {
+    public static final String DEFAULT_RESULT_FOLDER_PATH = "target//automated-test-results";
 
-    public static final String APPLICATION_SETTINGS_FILEPATH = "applicationsettings.yml";
-    public static final String FIELD_SETTINGS_FILEPATH = "fieldsettings.yml";
-    public static final String TESTRUN_SETTINGS_FILEPATH = "testrun.json";
+    private static final String APPLICATION_SETTINGS_FILEPATH = "application-settings.yml";
+    private static final String FIELD_SETTINGS_FILEPATH = "field-settings.yml";
 
-    private static ConfigurationManager current;
+    private ApplicationSettingsSerializer applicationSettingsSerializer;
+    private FieldSettingsSerializer fieldSettingsSerializer;
 
     private ApplicationSettings applicationSettings;
     private FieldSettings fieldSettings;
-    private TestPlan testPlanSettings;
 
-    private ConfigurationManager() {
-        ApplicationSettingsSerializer applicationSettingsSerializer = new ApplicationSettingsSerializer(ObjectSerializer.DataFormat.YAML);
-        FieldSettingsSerializer fieldSettingsSerializer = new FieldSettingsSerializer(ObjectSerializer.DataFormat.YAML);
-        TestRunSerializer testRunSerializer = new TestRunSerializer(ObjectSerializer.DataFormat.JSON);
+    private ConfigurationManager(
+            ApplicationSettingsSerializer applicationSettingsSerializer,
+            FieldSettingsSerializer fieldSettingsSerializer) {
+        this.applicationSettingsSerializer = applicationSettingsSerializer;
+        this.fieldSettingsSerializer = fieldSettingsSerializer;
 
         this.applicationSettings = applicationSettingsSerializer.retrieve(APPLICATION_SETTINGS_FILEPATH, true);
         this.fieldSettings = fieldSettingsSerializer.retrieve(FIELD_SETTINGS_FILEPATH, true);
-        this.testPlanSettings = testRunSerializer.retrieve(TESTRUN_SETTINGS_FILEPATH, true);
-    }
-
-    public static synchronized ConfigurationManager getCurrent() {
-        if (ConfigurationManager.current == null)
-            ConfigurationManager.current = new ConfigurationManager();
-
-        return ConfigurationManager.current;
     }
 
     public ApplicationSettings getApplicationSettings() {
+        return this.getApplicationSettings(null);
+    }
+
+    public ApplicationSettings getApplicationSettings(String filename) {
+        if (filename != null || filename.length() > 0)
+            this.applicationSettings = this.applicationSettingsSerializer.retrieve(filename, true);
+
         return this.applicationSettings;
     }
 
-    public TestPlan getTestPlanSettings() {
-        return this.testPlanSettings;
+    public FieldSettings getFieldSettings() {
+        return this.getFieldSettings(null);
     }
 
-    public FieldSettings getFieldSettings() {
+    public FieldSettings getFieldSettings(String filename) {
+        if (filename != null || filename.length() > 0)
+            this.fieldSettings = this.fieldSettingsSerializer.retrieve(filename, true);
+
         return this.fieldSettings;
     }
-
 }

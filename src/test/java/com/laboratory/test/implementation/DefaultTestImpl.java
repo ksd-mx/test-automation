@@ -1,6 +1,44 @@
 package test.java.com.laboratory.test.implementation;
 
-import main.java.com.framework.test.automation.SecureWebApplicationAutomatedTest;
+import main.java.com.framework.test.BaseTestClass;
+import main.java.com.framework.test.ExecutionContext;
+import org.testng.ITestContext;
+import org.testng.ITestResult;
 
-public class DefaultTestImpl extends SecureWebApplicationAutomatedTest {
+import java.lang.reflect.Method;
+
+public class DefaultTestImpl extends BaseTestClass {
+    public DefaultTestImpl(ExecutionContext executionContext) throws Throwable {
+        super(executionContext);
+    }
+
+    @Override
+    public void beforeClass(ITestContext testContext) {
+        System.out.println("Executing BEFORE CLASS method");
+    }
+
+    @Override
+    public void afterClass(ITestContext testContext) {
+        System.out.println("Executing AFTER CLASS method");
+    }
+
+    @Override
+    public void beforeTest(ITestContext testContext) {
+        System.out.println("Executing BEFORE TEST method");
+    }
+
+    @Override
+    public void afterTest(ITestContext testContext) {
+        System.out.println("Executing AFTER TEST method");
+    }
+
+    @Override
+    public void beforeMethod(ITestContext testContext, Method method) {
+        System.out.println("Executing BEFORE METHOD method");
+    }
+
+    @Override
+    public void afterMethod(ITestContext testContext, ITestResult result) {
+        System.out.println("Executing AFTER METHOD method");
+    }
 }

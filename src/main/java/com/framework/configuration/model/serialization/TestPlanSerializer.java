@@ -1,23 +1,14 @@
-package main.java.com.framework.test.model.serialization;
+package main.java.com.framework.configuration.model.serialization;
 
-import main.java.com.framework.configuration.model.ApplicationSettings;
-import main.java.com.framework.configuration.ConfigurationManager;
 import main.java.com.framework.serialization.ObjectSerializer;
 import main.java.com.framework.test.model.TestPlan;
 
 import java.io.IOException;
 
-public class TestRunSerializer {
+public class TestPlanSerializer {
     private final ObjectSerializer objectSerializer;
 
-    public TestRunSerializer() {
-        this(ConfigurationManager
-                        .getCurrent()
-                        .getApplicationSettings()
-                        .getDefaultSerializationDataType());
-    }
-
-    public TestRunSerializer(ObjectSerializer.DataFormat format) {
+    public TestPlanSerializer(ObjectSerializer.DataFormat format) {
         this.objectSerializer = ObjectSerializer.createSerializer(format);
     }
 
@@ -27,7 +18,7 @@ public class TestRunSerializer {
         try {
             result = (TestPlan) this.objectSerializer
                     .ReadSettingsFromFile(
-                            ApplicationSettings.class,
+                            TestPlan.class,
                             fileName);
         } catch (IOException e) {
             if (create) {
@@ -41,10 +32,14 @@ public class TestRunSerializer {
         }
     }
 
-    public void save(TestPlan testPlan, String filename) throws Throwable {
-        this.objectSerializer
-                .WriteSettingsToFile(
-                        testPlan,
-                        filename);
+    public void save(TestPlan testPlan, String filename) {
+        try {
+            this.objectSerializer
+                    .WriteSettingsToFile(
+                            testPlan,
+                            filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,12 +1,14 @@
 package main.java.com.framework.test.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestStep extends DefaultTestArtifact {
+public class TestStep extends TestArtifact {
+    @JsonIgnore
+    private TestCase testCase;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String actionPath;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,24 +22,31 @@ public class TestStep extends DefaultTestArtifact {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<String> screenshotPathList;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<InputData> inputDataList;
+    private List<TestField> testFieldList;
 
     public TestStep() {
-        this.inputDataList = new ArrayList<>();
+        this.testFieldList = new ArrayList<>();
         this.screenshotPathList = new ArrayList<>();
     }
 
-    public TestStep(String actionPath, String outcome, String expectation) {
+    public TestStep(TestCase testCase, String actionPath, String outcome, String expectation) {
         this();
 
+        this.setTestCase(testCase);
         this.setActionPath(actionPath);
         this.setOutcome(outcome);
         this.setExpectation(expectation);
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public String getTestCaseId() { return super.getExternalId(); }
-    public void setTestCaseId(String value) { super.setExternalId(value); }
+    @JsonIgnore
+    public TestCase getTestCase() { return this.testCase; }
+    public void setTestCase(TestCase value) { this.testCase = value; }
+
+    @Override
+    @JsonIgnore
+    public String getExternalId() { return String.format("%s_%s", this.testCase.getExternalId(), this.actionPath); }
+    @Override
+    public void setExternalId(String value) { super.setExternalId(value); }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getActionPath() { return this.actionPath; }
@@ -64,6 +73,6 @@ public class TestStep extends DefaultTestArtifact {
     protected void setScreenshotList(List<String> value) { this.screenshotPathList = value; }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public List<InputData> getInputDataList() { return this.inputDataList; }
-    protected void setInputDataList(List<InputData> value) { this.inputDataList = value; }
+    public List<TestField> getTestFieldList() { return this.testFieldList; }
+    protected void setTestFieldList(List<TestField> value) { this.testFieldList = value; }
 }

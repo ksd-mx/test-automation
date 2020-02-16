@@ -1,45 +1,31 @@
 package test.java.com.laboratory.test;
 
-import main.java.com.framework.test.Step;
+import main.java.com.framework.test.ExecutionContext;
+import main.java.com.framework.test.description.IStepStrategy;
 import test.java.com.laboratory.test.implementation.DefaultTestImpl;
+import test.java.com.laboratory.test.implementation.sharedsteps.SumStep;
 import test.java.com.laboratory.test.implementation.testcases.Laboratory.Laboratory;
 import org.testng.annotations.*;
 import org.testng.Assert;
 
 public class LaboratoryTest extends DefaultTestImpl {
+    private final IStepStrategy sumStep;
+
+    public LaboratoryTest(ExecutionContext executionContext) throws Throwable {
+        super(executionContext);
+
+        this.sumStep = this.getStepStrategy(null, SumStep.class);
+    }
 
     @Test()
     public void shouldPassSummingTwoNumbers() {
-        this.someTestStep01();
-        this.someTestStep02();
-        Assert.assertEquals(new Laboratory().sumTwoNumbers(1, 1), 2, "Something went wrong!");
+        this.sumStep.execute();
     }
 
     @Test()
     public void shouldFailSummingTwoNumbers() {
-        this.someTestStep03();
-        this.someTestStep04();
+        this.sumStep.execute();
         Assert.assertNotEquals(new Laboratory().sumTwoNumbersFail(1, 1), 2, "Something went wrong!");
-    }
-
-    @Step(testCaseId = "1", actionPath = "000000a", screenshotBefore = true, screenshotAfter = true)
-    public void someTestStep01() {
-        System.out.println("Step 1");
-    }
-
-    @Step(testCaseId = "1", actionPath = "000000b", screenshotBefore = true, screenshotAfter = true)
-    public void someTestStep02() {
-        System.out.println("Step 2");
-    }
-
-    @Step(testCaseId = "2", actionPath = "000000a", screenshotBefore = true, screenshotAfter = true)
-    public void someTestStep03() {
-        System.out.println("Step 1");
-    }
-
-    @Step(testCaseId = "2", actionPath = "000000b", screenshotBefore = true, screenshotAfter = true)
-    public void someTestStep04() {
-        System.out.println("Step 2");
     }
 
 }

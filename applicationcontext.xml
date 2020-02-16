@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <aop:aspectj-autoproxy />
-    <bean id="TestStepAuditAspect" class="main.java.com.framework.test.aspects.TestStepAuditAspect" />
+    <bean id="WebDriverManager" class="main.java.com.framework.configuration.model.serialization.WebDriverManager" >
+        <constructor-arg value="CHROME" type="main.java.com.framework.test.selenium.DriverFactory.DriverType" />
+    </bean>
+    <bean id="ApplicationSettingsSerializer" class="main.java.com.framework.configuration.model.serialization.ApplicationSettingsSerializer" >
+        <constructor-arg value="YAML" type="main.java.com.framework.serialization.ObjectSerializer.DataFormat" />
+    </bean>
+    <bean id="FieldSettingsSerializer" class="main.java.com.framework.configuration.model.serialization.FieldSettingsSerializer">
+        <constructor-arg value="JSON" type="main.java.com.framework.serialization.ObjectSerializer.DataFormat" />
+    </bean>
+    <bean id="TestPlanSerializer" class="main.java.com.framework.configuration.model.serialization.TestPlanSerializer">
+        <constructor-arg value="JSON" type="main.java.com.framework.serialization.ObjectSerializer.DataFormat" />
+    </bean>
+    <bean id="ConfigurationManager" class="main.java.com.framework.configuration.ConfigurationManager">
+        <constructor-arg ref="ApplicationSettingsSerializer" />
+        <constructor-arg ref="FieldSettingsSerializer" />
+    </bean>
+    <bean id="ExecutionContext" class="main.java.com.framework.test.ExecutionContext">
+        <constructor-arg ref="ConfigurationManager" />
+        <constructor-arg ref="WebDriverManager" />
+        <constructor-arg ref="TestPlanSerializer" />
+    </bean>
 </beans>

@@ -2,7 +2,7 @@ package main.java.com.framework.test.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-public class DefaultTestArtifact {
+public abstract class TestArtifact {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String externalId;
@@ -16,6 +16,14 @@ public class DefaultTestArtifact {
     private String finish;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Result result;
+
+    public TestArtifact() {}
+
+    public TestArtifact(String externalId, String name, int priority) {
+        this.setExternalId(externalId);
+        this.setName(name);
+        this.setPriority(priority);
+    }
 
     public String getExternalId() { return this.externalId; }
     public void setExternalId(String value) { this.externalId = value; }

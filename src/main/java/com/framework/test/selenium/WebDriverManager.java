@@ -1,37 +1,26 @@
 package main.java.com.framework.test.selenium;
 
-import main.java.com.framework.configuration.ConfigurationManager;
-import org.openqa.selenium.WebDriver;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class WebDriverManager {
-    private static WebDriverManager current;
-
-    // Driver property is final since recreating the driver is not allowed
     private final WebDriver driver;
 
     private WebDriverManager(DriverFactory.DriverType driverType) {
         this.driver = DriverFactory.createDriver(driverType);
     }
 
-    public static WebDriverManager getCurrent() {
-        return getCurrent(ConfigurationManager.getCurrent().getApplicationSettings().getDefaultSeleniumDriverType());
-    }
+    public File getScreenShot(String filePath) throws Throwable {
+        File screenshotFile = ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.FILE);
 
-    public static WebDriverManager getCurrent(DriverFactory.DriverType driverType) {
-        // Not considering whether there is an existing driver
-        // from a different type because runtime driver type
-        // switching support is not required yet.
-        if (WebDriverManager.current == null) {
-            WebDriverManager.current = new WebDriverManager(driverType);
-        }
+        File result = new File(filePath);
 
-        return WebDriverManager.current;
-    }
+        FileUtils.moveFile(screenshotFile, result);
 
-    public WebDriver getDriver() {
-        return this.driver;
+        return result;
     }
 
     public void startWebDriver() {
@@ -41,7 +30,6 @@ public class WebDriverManager {
     }
 
     public void stopWebDriver() {
-        //this.driver.close();
         this.driver.quit();
     }
 }

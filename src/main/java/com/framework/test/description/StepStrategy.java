@@ -1,42 +1,49 @@
 package main.java.com.framework.test.description;
 
-import main.java.com.framework.configuration.ConfigurationManager;
-import main.java.com.framework.test.model.InputData;
+import main.java.com.framework.test.ExecutionContext;
+import main.java.com.framework.test.model.TestField;
 import main.java.com.framework.test.model.TestStep;
-import org.openqa.selenium.NotFoundException;
+
+import java.time.LocalDateTime;
 
 public abstract class StepStrategy implements IStepStrategy {
+    private ExecutionContext executionContext;
     private TestStep step;
 
-    public StepStrategy(TestStep step) {
+    public StepStrategy(ExecutionContext executionContext, TestStep step) {
+        this.executionContext = executionContext;
         this.step = step;
     }
 
-    public abstract void execute();
+    public final void execute() {
+        try {
+            this.executionContext.getScreenShot(this.step, "BEFORE");
+            this.step.setStart(LocalDateTime.now().toString());
+            this.onExecute();
+            this.step.setFinish(LocalDateTime.now().toString());
+            this.executionContext.getScreenShot(this.step, "AFTER");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    public abstract void onExecute();
+
+    protected void setOutputValue(String key, String value) {
+        this.step.getTestCase().getOutputValueList().put(key, value);
+    }
 
     protected void setFieldValue(String key, String value) {
-        InputData fieldSetting = null;
-        InputData fieldTracking = null;
+        TestField existing = null;
 
-        for (InputData item : ConfigurationManager.getCurrent().getFieldSettings()) {
-            if (item.getKey().equals(key)) {
-                fieldSetting = item;
-                break;
+        for (TestField field : this.step.getTestFieldList()) {
+            if (field.getKey().equals(key)) {
+                existing = field;
             }
         }
 
-        if (fieldSetting == null) throw new NotFoundException("Field %s has no definition set up.");
+        if (existing == null) existing = this.executionContext.getTestFieldFromSettings(key);
 
-        for (InputData stepField : this.step.getInputDataList()) {
-            if (stepField.getKey().equals(fieldSetting.getKey())) {
-                fieldTracking = stepField;
-                break;
-            }
-        }
-
-        if (fieldTracking == null)
-            fieldTracking = new InputData(key, fieldSetting.getPath(), fieldSetting.getPathType());
-
-        fieldTracking.setValue(value);
+        existing.setValue(value);
     }
 }

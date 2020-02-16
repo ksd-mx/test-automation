@@ -2,26 +2,39 @@ package main.java.com.framework.test.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-public class TestCase extends DefaultTestArtifact {
+public class TestCase extends TestArtifact {
 
-    private List<TestStep> testStepList;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private final Map<String, String> outputValueList;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private final List<TestStep> testStepList;
 
     public TestCase() {
+        this.outputValueList = new HashMap<>();
         this.testStepList = new ArrayList<>();
     }
 
-    public TestCase(String id, String name) {
-        this();
+    public TestCase(String id, String name, int priority) {
+        super(id, name, priority);
 
-        super.setExternalId(id);
-        super.setName(name);
+        this.outputValueList = new HashMap<>();
+        this.testStepList = new ArrayList<>();
     }
 
-    public List<TestStep> getTestStepList() { return this.testStepList; }
-    protected void setTestStepList(List<TestStep> value) { this.testStepList = value; }
+    public Map<String, String> getOutputValueList() {
+        return this.outputValueList;
+    }
+
+    public List<TestStep> getTestStepList() {
+        return this.testStepList;
+    }
+
+    public TestStep getTestStep(String actionPath) {
+        for (TestStep ts : this.getTestStepList()) {
+            if (ts.getActionPath().equals(actionPath)) return ts;
+        }
+        return null;
+    }
 }

@@ -1,6 +1,5 @@
 package main.java.com.framework.configuration.model.serialization;
 
-import main.java.com.framework.configuration.ConfigurationManager;
 import main.java.com.framework.configuration.model.FieldSettings;
 import main.java.com.framework.serialization.ObjectSerializer;
 
@@ -8,13 +7,6 @@ import java.io.IOException;
 
 public class FieldSettingsSerializer {
     private final ObjectSerializer objectSerializer;
-
-    public FieldSettingsSerializer() {
-        this(ConfigurationManager
-                .getCurrent()
-                .getApplicationSettings()
-                .getDefaultSerializationDataType());
-    }
 
     public FieldSettingsSerializer(ObjectSerializer.DataFormat format) {
         this.objectSerializer = ObjectSerializer.createSerializer(format);
