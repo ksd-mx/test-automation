@@ -17,11 +17,11 @@ public abstract class StepStrategy implements IStepStrategy {
 
     public final void execute() {
         try {
-            this.executionContext.getScreenShot(this.step, "BEFORE");
+            this.executionContext.takeScreenshot(this.step, "BEFORE");
             this.step.setStart(LocalDateTime.now().toString());
             this.onExecute();
             this.step.setFinish(LocalDateTime.now().toString());
-            this.executionContext.getScreenShot(this.step, "AFTER");
+            this.executionContext.takeScreenshot(this.step, "AFTER");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }

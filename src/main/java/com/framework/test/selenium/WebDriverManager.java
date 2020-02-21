@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class WebDriverManager {
     private final WebDriver driver;
 
-    private WebDriverManager(DriverFactory.DriverType driverType) {
+    public WebDriverManager(DriverFactory.DriverType driverType) {
         this.driver = DriverFactory.createDriver(driverType);
     }
 

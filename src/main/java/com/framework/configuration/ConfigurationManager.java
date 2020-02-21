@@ -6,8 +6,6 @@ import main.java.com.framework.configuration.model.serialization.ApplicationSett
 import main.java.com.framework.configuration.model.serialization.FieldSettingsSerializer;
 
 public final class ConfigurationManager {
-    public static final String DEFAULT_RESULT_FOLDER_PATH = "target//automated-test-results";
-
     private static final String APPLICATION_SETTINGS_FILEPATH = "application-settings.yml";
     private static final String FIELD_SETTINGS_FILEPATH = "field-settings.yml";
 
@@ -17,7 +15,7 @@ public final class ConfigurationManager {
     private ApplicationSettings applicationSettings;
     private FieldSettings fieldSettings;
 
-    private ConfigurationManager(
+    public ConfigurationManager(
             ApplicationSettingsSerializer applicationSettingsSerializer,
             FieldSettingsSerializer fieldSettingsSerializer) {
         this.applicationSettingsSerializer = applicationSettingsSerializer;
@@ -28,10 +26,12 @@ public final class ConfigurationManager {
     }
 
     public ApplicationSettings getApplicationSettings() {
-        return this.getApplicationSettings(null);
+        return this.getApplicationSettings(ConfigurationManager.APPLICATION_SETTINGS_FILEPATH);
     }
 
     public ApplicationSettings getApplicationSettings(String filename) {
+        System.out.println(String.format("Reading configuration file: %s", filename));
+
         if (filename != null || filename.length() > 0)
             this.applicationSettings = this.applicationSettingsSerializer.retrieve(filename, true);
 
@@ -39,7 +39,7 @@ public final class ConfigurationManager {
     }
 
     public FieldSettings getFieldSettings() {
-        return this.getFieldSettings(null);
+        return this.getFieldSettings(ConfigurationManager.FIELD_SETTINGS_FILEPATH);
     }
 
     public FieldSettings getFieldSettings(String filename) {

@@ -50,4 +50,17 @@ public class TestPlan extends TestArtifact {
 
         return result;
     }
+
+    public TestStep getTestStep(String testCaseId, String testStepActionPath) {
+        for (TestGroup group : this.testGroupList) {
+            for (TestCase tc : group.getTestCaseList()) {
+                if (!tc.getExternalId().equals(testCaseId)) continue;
+
+                for (TestStep step : tc.getTestStepList()) {
+                    if (step.getActionPath().equals(testStepActionPath)) return step;
+                }
+            }
+        }
+        return null;
+    }
 }
