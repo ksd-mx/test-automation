@@ -17,8 +17,10 @@ class TestGroup {
     [TestCase[]] $testCaseList
 }
 
+$personal_access_token = ""
 $auth_header = @{Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($personal_access_token)")) }
 
+$env:SYSTEM_COLLECTIONURI = ""
 
 $suite_list = New-Object System.Collections.ArrayList($null)
 $base_uri = "${env:SYSTEM_COLLECTIONURI}/_apis"
@@ -80,7 +82,9 @@ Function GetTestCaseSteps {
     [CmdletBinding()]
     param($testcase)
 
-    [regex]$rgx = '("\d+\")'
+    [regex] $step_rgx = '<step id="\d+" [a-zA-Z0-9="]+>(.*?)<\/step>'
+    [regex] $param_rgx = '<parameterizedString\s[a-zA-Z0-9="]+>(.*?)<\/parameterizedString>'
+
     $testcaseid = $testcase.testCase.id
 
     $wit_uri = "${workitem_uri}/${testcaseid}${api51_version}"
@@ -88,7 +92,31 @@ Function GetTestCaseSteps {
     Write-Host "# Invoking WITs API @ ${wit_uri}"
     $wit_result = Invoke-RestMethod -Uri "${wit_uri}" -Method Get -Headers $auth_header -UseBasicParsing
 
-    Select-String -input $wit_result.fields.'Microsoft.VSTS.TCM.Steps' -Pattern $rgx | Write-Host
+    # Lets clean up the steps information filled with
+    # HTML noise and parse it down to a collection of steps
+    $step_data = `
+        $wit_result.fields.'Microsoft.VSTS.TCM.Steps' `
+            -replace '(\</*steps(\>*.id=\"\d*" last=\"\d*")?\>*)' `
+            -replace '(&lt;\/*[a-zA-Z0-9;=\"\]+\s[a-zA-Z0-9;=\"\-:(,.)]+\/*&gt;)'
+
+    # -replace '<parameterizedString\s[a-zA-Z0-9="]+>'
+    foreach ($match in $step_rgx.Matches($step_data)) {
+        $stepparams = $param_rgx.Matches($match)
+
+        $step_action = $stepparams[0] `
+            -replace '<parameterizedString\s[a-zA-Z0-9="]+>' `
+            -replace '<\/parameterizedString>' `
+            -replace '\s+', ' '
+
+        $step_outcome = $stepparams[1] `
+            -replace '<parameterizedString\s[a-zA-Z0-9="]+>' `
+            -replace '<\/parameterizedString>' `
+            -replace '\s+', ' '
+
+        Write-Host "# MATCH: ${match}"
+        Write-Host "# STEP ACTION: " $step_action
+        Write-Host "# STEP OUTCOME: " $step_outcome
+    }
 }
 
 $remotetestplan = Invoke-RestMethod -Uri "${testplan_uri}" -Method Get -Headers $auth_header
