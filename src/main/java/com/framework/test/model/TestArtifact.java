@@ -17,9 +17,12 @@ public abstract class TestArtifact {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Result result;
 
-    public TestArtifact() {}
+    public TestArtifact() {
+        this.result = Result.NOTEXECUTED;
+    }
 
     public TestArtifact(String externalId, String name, int priority) {
+        this();
         this.setExternalId(externalId);
         this.setName(name);
         this.setPriority(priority);

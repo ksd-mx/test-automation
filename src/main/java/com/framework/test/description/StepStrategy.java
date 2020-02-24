@@ -1,7 +1,7 @@
 package main.java.com.framework.test.description;
 
 import main.java.com.framework.test.ExecutionContext;
-import main.java.com.framework.test.model.TestField;
+import main.java.com.framework.test.model.Result;
 import main.java.com.framework.test.model.TestStep;
 
 import java.time.LocalDateTime;
@@ -34,16 +34,10 @@ public abstract class StepStrategy implements IStepStrategy {
     }
 
     protected void setFieldValue(String key, String value) {
-        TestField existing = null;
+        this.executionContext.setTestFieldValue(this.step, key, value);
+    }
 
-        for (TestField field : this.step.getTestFieldList()) {
-            if (field.getKey().equals(key)) {
-                existing = field;
-            }
-        }
-
-        if (existing == null) existing = this.executionContext.getTestFieldFromSettings(key);
-
-        existing.setValue(value);
+    protected void setStepResult(Result stepResult) {
+        this.step.setResult(stepResult);
     }
 }

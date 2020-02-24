@@ -33,7 +33,7 @@ public class TestCase extends TestArtifact {
 
     public TestStep getTestStep(String actionPath) {
         for (TestStep ts : this.getTestStepList()) {
-            if (ts.getActionPath().equals(actionPath)) return ts;
+            if (ts.getAction().equals(actionPath)) return ts;
         }
         return null;
     }

@@ -92,7 +92,6 @@ Function GetTestCase {
             $newtestcase = [TestCase]::New()
 
             $newtestcase.externalId = $item.testCase.id
-            $newtestcase.name = $item.testCase.name
 
             $parentgroup.testCaseList += $newtestcase
 
@@ -105,6 +104,8 @@ Function GetTestCaseSteps {
     [CmdletBinding()]
     param($parenttestcase)
 
+    [int] $sequence = 0
+    [regex] $id_rgx = '\d+'
     [regex] $step_rgx = '<step id="\d+" [a-zA-Z0-9="]+>(.*?)<\/step>'
     [regex] $param_rgx = '<parameterizedString\s[a-zA-Z0-9="]+>(.*?)<\/parameterizedString>'
 
@@ -114,6 +115,8 @@ Function GetTestCaseSteps {
 
     Write-Host "# Invoking WITs API @ ${wit_uri}"
     $wit_result = Invoke-RestMethod -Uri "${wit_uri}" -Method Get -Headers $auth_header -UseBasicParsing
+
+    $parenttestcase.name = $wit_result.fields.'System.Title'
 
     # Lets clean up the steps information filled with
     # HTML noise and parse it down to a collection of steps
@@ -142,6 +145,7 @@ Function GetTestCaseSteps {
         Write-Host "# STEP OUTCOME: " $step_outcome
 
         $newtestcasestep = [TestStep]::New()
+        $newtestcasestep.externalId = $sequence++
         $newtestcasestep.action = $step_action
         $newtestcasestep.outcome = $step_outcome
 

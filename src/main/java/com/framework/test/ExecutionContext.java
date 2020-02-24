@@ -19,8 +19,8 @@ public class ExecutionContext {
 
     private final Path resultFilePath;
 
-    private final TestPlanSerializer testPlanSettingsSerializer;
-    private final TestPlan testPlanSettings;
+    private final TestGroupSerializer testPlanSettingsSerializer;
+    private final TestGroup testPlanSettings;
 
     private final ConfigurationManager configurationManager;
     private final WebDriverManager webDriverManager;
@@ -28,7 +28,7 @@ public class ExecutionContext {
     private ExecutionContext(
             ConfigurationManager configurationManager,
             WebDriverManager webDriverManager,
-            TestPlanSerializer testPlanSettingsSerializer) {
+            TestGroupSerializer testPlanSettingsSerializer) {
 
         this.configurationManager = configurationManager;
         this.resultFilePath = Paths.get(
@@ -36,7 +36,9 @@ public class ExecutionContext {
                 ExecutionContext.TESTRUN_RESULT_FILENAME);
         this.webDriverManager = webDriverManager;
         this.testPlanSettingsSerializer = testPlanSettingsSerializer;
-        this.testPlanSettings = this.testPlanSettingsSerializer.retrieve(TESTRUN_SETTINGS_FILEPATH, true);
+        this.testPlanSettings = this.testPlanSettingsSerializer.retrieve(TESTRUN_SETTINGS_FILEPATH, false);
+
+        this.testPlanSettingsSerializer.save(this.testPlanSettings, "testing.json");
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::onExitRuntime));
 
@@ -54,13 +56,26 @@ public class ExecutionContext {
                             new ApplicationSettingsSerializer(ObjectSerializer.DataFormat.YAML),
                             new FieldSettingsSerializer(ObjectSerializer.DataFormat.YAML)),
                     new WebDriverManager(DriverFactory.DriverType.CHROME),
-                    new TestPlanSerializer(ObjectSerializer.DataFormat.JSON));
+                    new TestGroupSerializer(ObjectSerializer.DataFormat.JSON));
 
         return ExecutionContext.current;
     }
 
-    public TestPlan getTestPlan() {
+    public TestGroup getTestPlan() {
         return this.testPlanSettings;
+    }
+
+    public void setTestFieldValue(TestStep testStep, String key, String value) {
+        if (this.configurationManager.getFieldSettings() != null) {
+            for (TestField field : this.configurationManager.getFieldSettings()) {
+                if (field.getKey().equals(key)) {
+                    field.setValue(value);
+
+                    if (!testStep.getTestFieldList().contains(testStep))
+                        testStep.getTestFieldList().add(field);
+                }
+            }
+        }
     }
 
     public void takeScreenshot(TestStep testStep, String filesufix) throws Throwable {
@@ -68,21 +83,17 @@ public class ExecutionContext {
                 Paths.get(
                         this.configurationManager.getApplicationSettings().getResultPath(),
                         testStep.getTestCase().getExternalId(),
-                        testStep.getActionPath(),
-                        String.format("SCREENSHOT_%s_%s.png", testStep.getExternalId(), filesufix));
+                        testStep.getExternalId(),
+                        String.format("SCREENSHOT_%s_%s_%s.png",
+                                testStep.getTestCase().getExternalId(),
+                                testStep.getExternalId(),
+                                filesufix));
 
         System.out.println(String.format("Saving screenshot to %s", filePath.toString()));
 
         this.webDriverManager.getScreenShot(filePath.toString());
 
         testStep.getScreenshotList().add(filePath.toString());
-    }
-
-    public TestField getTestFieldFromSettings(String fieldKey) {
-        for (TestField field : this.configurationManager.getFieldSettings()) {
-            if (field.getKey().equals(fieldKey)) return field;
-        }
-        throw new NotFoundException(String.format("There are no settings for %s", fieldKey));
     }
 
     private void exportExecutionResults() {

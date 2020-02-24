@@ -10,7 +10,7 @@ public class TestStep extends TestArtifact {
     @JsonIgnore
     private TestCase testCase;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String actionPath;
+    private String action;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String expectation;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -29,11 +29,11 @@ public class TestStep extends TestArtifact {
         this.screenshotPathList = new ArrayList<>();
     }
 
-    public TestStep(TestCase testCase, String actionPath, String outcome, String expectation) {
+    public TestStep(TestCase testCase, String action, String outcome, String expectation) {
         this();
 
         this.setTestCase(testCase);
-        this.setActionPath(actionPath);
+        this.setAction(action);
         this.setOutcome(outcome);
         this.setExpectation(expectation);
     }
@@ -42,15 +42,9 @@ public class TestStep extends TestArtifact {
     public TestCase getTestCase() { return this.testCase; }
     public void setTestCase(TestCase value) { this.testCase = value; }
 
-    @Override
-    @JsonIgnore
-    public String getExternalId() { return String.format("%s_%s", this.testCase.getExternalId(), this.actionPath); }
-    @Override
-    public void setExternalId(String value) { super.setExternalId(value); }
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public String getActionPath() { return this.actionPath; }
-    public void setActionPath(String value) { this.actionPath = value; }
+    public String getAction() { return this.action; }
+    public void setAction(String value) { this.action = value; }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getExpectation() { return this.expectation; }

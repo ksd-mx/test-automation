@@ -2,6 +2,8 @@ package main.java.com.framework.test.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.ArrayList;
+
 public class TestField {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String key;
@@ -12,7 +14,11 @@ public class TestField {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private PathType pathType;
 
+    public TestField() {
+    }
+
     public TestField(String key, String path, PathType pathType) {
+        this();
         this.setKey(key);
         this.setPath(path);
         this.setPathType(pathType);

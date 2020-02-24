@@ -14,7 +14,7 @@
     <bean id="fieldSettingsSerializer" class="main.java.com.framework.configuration.model.serialization.FieldSettingsSerializer">
         <constructor-arg value="JSON" type="main.java.com.framework.serialization.ObjectSerializer.DataFormat" />
     </bean>
-    <bean id="testPlanSerializer" class="main.java.com.framework.configuration.model.serialization.TestPlanSerializer">
+    <bean id="testPlanSerializer" class="main.java.com.framework.configuration.model.serialization.TestGroupSerializer">
         <constructor-arg value="JSON" type="main.java.com.framework.serialization.ObjectSerializer.DataFormat" />
     </bean>
     <bean id="configurationManager" class="main.java.com.framework.configuration.ConfigurationManager">
