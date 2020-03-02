@@ -1,5 +1,3 @@
-param ([string]$testplan)
-
 class TestStep {
     [string] $externalId
     [string] $action
@@ -32,7 +30,8 @@ $now = [System.DateTime]::Now
 Write-Host "Starting at ${now}"
 
 $result_filename = if ($null -eq $env:TESTPLAN_FILENAME) { "execution-context.json" } else { $env:TESTPLAN_FILENAME }
-$base_uri = "${env:SYSTEM_COLLECTIONURI}/_apis"
+$testplan = $env:TESTPLAN_ID
+$base_uri = "${env:SYSTEM_COLLECTIONURI}${env:SYSTEM_TEAMPROJECTID}/_apis"
 $base_wit_uri = "${base_uri}/wit"
 $base_test_uri = "${base_uri}/test"
 $api50_version = "?api-version=5.0"
@@ -148,10 +147,15 @@ Function GetTestCaseSteps
     }
 }
 
+Write-Host "Invoking TEST PLAN API: ${testplan_uri}"
 $remotetestplan = Invoke-RestMethod -Uri "${testplan_uri}" -Method Get -Headers $auth_header
 
+($remotetestplan | ConvertTo-Json -depth 100 | Out-String)
+
+Write-Host ">>> ROOT SUITE FOUND: "$remotetestplan.rootSuite.id
 $testplan_group.externalId = $remotetestplan.rootSuite.id
 
+Write-Host "Starting TEST PLAN ${testplan} serialization"
 GetChildSuite -suiteid $testplan_group.externalId
 
 $testplan_group | ConvertTo-Json -depth 100 | Out-File $result_filename
