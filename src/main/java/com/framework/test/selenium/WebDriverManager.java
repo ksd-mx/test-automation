@@ -13,14 +13,12 @@ public class WebDriverManager {
         this.driver = DriverFactory.createDriver(driverType);
     }
 
-    public File getScreenShot(String filePath) throws Throwable {
+    public void getScreenShot(String filePath) throws Throwable {
         File screenshotFile = ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.FILE);
 
         File result = new File(filePath);
 
         FileUtils.moveFile(screenshotFile, result);
-
-        return result;
     }
 
     public void startWebDriver() {

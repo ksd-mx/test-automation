@@ -1,5 +1,6 @@
 package test.java.com.laboratory.test;
 
+import main.java.com.framework.test.ExecutionContext;
 import main.java.com.framework.test.description.IStepStrategy;
 import main.java.com.framework.test.model.TestStep;
 import test.java.com.laboratory.test.implementation.DefaultTestImpl;
@@ -16,8 +17,10 @@ public class LaboratoryTest extends DefaultTestImpl {
     private final IStepStrategy sumStepImpl2;
 
     public LaboratoryTest() throws Throwable {
-        this.sumStep1 = this.getExecutionContext().getTestPlan().getTestStep("6309", "0");
-        this.sumStep2 = this.getExecutionContext().getTestPlan().getTestStep("6309", "1");
+        super(ExecutionContext.getCurrent().getTestPlan().getTestCase("6309"));
+
+        this.sumStep1 = this.getTestCase().getTestStep("0");
+        this.sumStep2 = this.getTestCase().getTestStep("1");
 
         this.sumStepImpl1 = this.getStepStrategy(this.sumStep1, SumStep.class);
         this.sumStepImpl2 = this.getStepStrategy(this.sumStep2, SumStep.class);

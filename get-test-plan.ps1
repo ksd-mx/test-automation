@@ -9,13 +9,18 @@ class TestStep {
 class TestCase {
     [string] $externalId
     [string] $name
+    [TestGroup] $testGroup
     [TestStep[]] $testStepList
 }
 
 class TestGroup {
     [string] $externalId
     [string] $name
-    [TestGroup[]] $testGroupList
+}
+
+class TestPlan {
+    [string] $externalId
+    [string] $name
     [TestCase[]] $testCaseList
 }
 
@@ -26,7 +31,7 @@ $auth_header = @{
 $now = [System.DateTime]::Now
 Write-Host "Starting at ${now}"
 
-$suite_list = New-Object System.Collections.ArrayList($null)
+$result_filename = if ($null -eq $env:TESTPLAN_FILENAME) { "execution-context.json" } else { $env:TESTPLAN_FILENAME }
 $base_uri = "${env:SYSTEM_COLLECTIONURI}/_apis"
 $base_wit_uri = "${base_uri}/wit"
 $base_test_uri = "${base_uri}/test"
@@ -36,13 +41,12 @@ $api_preview = "-preview.1"
 $testplan_uri = "${base_test_uri}/plans/${testplan}"
 $workitem_uri = "${base_wit_uri}/workitems"
 
-$testplan_group = [TestGroup]::New()
+$testplan_group = [TestPlan]::New()
 
-Function GetChildSuite {
+Function GetChildSuite
+{
     [CmdletBinding()]
-    param([TestGroup]$group)
-
-    $suiteid = $group.externalId
+    param($suiteid)
 
     $suite_uri = "${testplan_uri}/suites/${suiteid}${api50_version}"
     $suiteentry_uri = "${base_test_uri}/suiteentry/${suiteid}${api50_version}${api_preview}"
@@ -53,61 +57,54 @@ Function GetChildSuite {
     Write-Host "# Invoking SUITE DATA API @ ${suite_uri}"
     $rest_result = Invoke-RestMethod -Uri "$suiteentry_uri" -Method Get -Headers $auth_header -UseBasicParsing
 
-    $group.externalId = $suite_result.id
-    $group.name = $suite_result.name
+    Write-host "# Getting CHILD TEST SUITES for" $suite_result.id - $suite_result.name
 
-    Write-host "# Getting TEST SUITES for" $suite_result.id - $suite_result.name
+    if ($rest_result.count -gt 0 )
+    {
+        foreach ($item in $rest_result.value)
+        {
+            if ($item.childSuiteId -eq 0)
+            {
+                continue;
+            }
 
-    if ($rest_result.count -gt 0 ) {
-        foreach ($item in $rest_result.value ) {
-            if ($item.childSuiteId -eq 0) { continue; }
-            # if ($group.testGroupList -eq $null) { $group.testGroupList = [TestGroup[]]::New() }
-            $childGroup = [TestGroup]::New()
-            $childGroup.externalId = $item.childSuiteId
-
-            $group.testGroupList += $childGroup
-
-            GetChildSuite -group $childGroup
+            GetChildSuite -suiteid $item.childSuiteId
         }
     }
 
-    GetTestCase -parentgroup $group
-}
-
-Function GetTestCase {
-    [CmdletBinding()]
-    param($parentgroup)
-
-    $parentsuiteid = $parentgroup.externalId
-
-    $testcase_uri = "${testplan_uri}/suites/${parentsuiteid}/testcases${api50_version}"
+    $testcase_uri = "${testplan_uri}/suites/${suiteid}/testcases${api50_version}"
 
     Write-Host "# Invoking TEST CASES API @ ${testcase_uri}"
     $testcase_result = Invoke-RestMethod -Uri "$testcase_uri" -Method Get -Headers $auth_header -UseBasicParsing
 
-    Write-host "# Getting TEST CASES for" $parentgroup.externalId - $parentgroup.name
+    Write-host "# Getting TEST CASES for" $suite_result.id - $suite_result.name
 
-    if ($testcase_result.count -gt 0) {
-        foreach ($item in $testcase_result.value) {
+    if ($testcase_result.count -gt 0)
+    {
+        foreach ($item in $testcase_result.value)
+        {
             $newtestcase = [TestCase]::New()
+            $newtestcase.testGroup = [TestGroup]::New()
 
             $newtestcase.externalId = $item.testCase.id
+            $newtestcase.testGroup.externalId = $suite_result.id
+            $newtestcase.testGroup.name = $suite_result.name
 
-            $parentgroup.testCaseList += $newtestcase
+            $testplan_group.testCaseList += $newtestcase
 
             GetTestCaseSteps -parenttestcase $newtestcase
         }
     }
 }
 
-Function GetTestCaseSteps {
+Function GetTestCaseSteps
+{
     [CmdletBinding()]
     param($parenttestcase)
 
-    [int] $sequence = 0
-    [regex] $id_rgx = '\d+'
-    [regex] $step_rgx = '<step id="\d+" [a-zA-Z0-9="]+>(.*?)<\/step>'
-    [regex] $param_rgx = '<parameterizedString\s[a-zA-Z0-9="]+>(.*?)<\/parameterizedString>'
+    [int]$sequence = 0
+    [regex]$step_rgx = '<step id="\d+" [a-zA-Z0-9="]+>(.*?)<\/step>'
+    [regex]$param_rgx = '<parameterizedString\s[a-zA-Z0-9="]+>(.*?)<\/parameterizedString>'
 
     $testcaseid = $parenttestcase.externalId
 
@@ -120,17 +117,16 @@ Function GetTestCaseSteps {
 
     # Lets clean up the steps information filled with
     # HTML noise and parse it down to a collection of steps
-    $step_data = `
-        $wit_result.fields.'Microsoft.VSTS.TCM.Steps' `
+    $step_data = $wit_result.fields.'Microsoft.VSTS.TCM.Steps' `
             -replace '(\</*steps(\>*.id=\"\d*" last=\"\d*")?\>*)' `
             -replace '(&lt;\/*[a-zA-Z0-9;=\"\]+\s[a-zA-Z0-9;=\"\-:(,.)]+\/*&gt;)'
 
     # -replace '<parameterizedString\s[a-zA-Z0-9="]+>'
-    foreach ($match in $step_rgx.Matches($step_data)) {
+    foreach ($match in $step_rgx.Matches($step_data))
+    {
         $stepparams = $param_rgx.Matches($match)
 
-        $step_action = $stepparams[0] `
-            -replace '<parameterizedString\s[a-zA-Z0-9="]+>' `
+        $step_action = $stepparams[0] -replace '<parameterizedString\s[a-zA-Z0-9="]+>' `
             -replace '<\/parameterizedString>' `
             -replace '\s+', ' '
 
@@ -140,7 +136,6 @@ Function GetTestCaseSteps {
             -replace '\s+', ' '
 
         if ($step_action.length -eq 0 -OR $step_outcome.length -eq 0) { continue; }
-
         Write-Host "# STEP ACTION: " $step_action
         Write-Host "# STEP OUTCOME: " $step_outcome
 
@@ -157,6 +152,9 @@ $remotetestplan = Invoke-RestMethod -Uri "${testplan_uri}" -Method Get -Headers 
 
 $testplan_group.externalId = $remotetestplan.rootSuite.id
 
-GetChildSuite -group $testplan_group
+GetChildSuite -suiteid $testplan_group.externalId
 
-$testplan_group | ConvertTo-Json -depth 100 | Out-File "result_json.json"
+$testplan_group | ConvertTo-Json -depth 100 | Out-File $result_filename
+
+$now = [System.DateTime]::Now
+Write-Host "Finishing at ${now}"

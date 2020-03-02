@@ -1,12 +1,18 @@
 package test.java.com.laboratory.test.implementation;
 
 import main.java.com.framework.test.BaseTestClass;
+import main.java.com.framework.test.ExecutionContext;
+import main.java.com.framework.test.model.TestCase;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 
 import java.lang.reflect.Method;
 
 public class DefaultTestImpl extends BaseTestClass {
+
+    public DefaultTestImpl(TestCase testCase) {
+        super(testCase);
+    }
 
     @Override
     public void beforeClass(ITestContext testContext) {

@@ -7,6 +7,8 @@ import java.util.*;
 public class TestCase extends TestArtifact {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private TestGroup testGroup;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Map<String, String> outputValueList;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<TestStep> testStepList;
@@ -23,6 +25,10 @@ public class TestCase extends TestArtifact {
         this.testStepList = new ArrayList<>();
     }
 
+    public TestGroup getTestGroup() {
+        return this.testGroup;
+    }
+
     public Map<String, String> getOutputValueList() {
         return this.outputValueList;
     }
@@ -31,9 +37,13 @@ public class TestCase extends TestArtifact {
         return this.testStepList;
     }
 
-    public TestStep getTestStep(String actionPath) {
-        for (TestStep ts : this.getTestStepList()) {
-            if (ts.getAction().equals(actionPath)) return ts;
+    public TestStep getTestStep(String testStepId) {
+        for (TestStep testStep : this.getTestStepList()) {
+            if (testStep.getExternalId().equals(testStepId)) {
+                testStep.setTestCase(this);
+
+                return testStep;
+            }
         }
         return null;
     }

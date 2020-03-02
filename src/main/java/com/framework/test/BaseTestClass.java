@@ -1,10 +1,9 @@
 package main.java.com.framework.test;
 
-import main.java.com.framework.test.BaseTestClass;
-import main.java.com.framework.test.ExecutionContext;
 import main.java.com.framework.test.description.StepStrategy;
+import main.java.com.framework.test.model.TestCase;
 import main.java.com.framework.test.model.TestStep;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -12,7 +11,13 @@ import org.testng.annotations.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-public abstract class BaseTestClass {
+public abstract class BaseTestClass implements ITest {
+
+    private final TestCase testCase;
+
+    protected BaseTestClass(TestCase testCase) {
+        this.testCase = testCase;
+    }
 
     public abstract void beforeClass(ITestContext testContext);
 
@@ -26,8 +31,11 @@ public abstract class BaseTestClass {
 
     public abstract void afterMethod(ITestContext testContext, ITestResult result);
 
-    protected ExecutionContext getExecutionContext() {
-        return ExecutionContext.getCurrent();
+    public TestCase getTestCase() { return this.testCase; }
+
+    @Override
+    public String getTestName() {
+        return this.testCase.getName();
     }
 
     @BeforeClass
@@ -63,6 +71,6 @@ public abstract class BaseTestClass {
     protected <T extends StepStrategy> T getStepStrategy(TestStep testStep, Class<T> returnType) throws Throwable {
         Constructor<T> constructor = returnType.getConstructor(ExecutionContext.class, TestStep.class);
 
-        return constructor.newInstance(this.getExecutionContext(), testStep);
+        return constructor.newInstance(ExecutionContext.getCurrent(), testStep);
     }
 }

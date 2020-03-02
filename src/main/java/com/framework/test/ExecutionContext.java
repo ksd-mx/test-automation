@@ -5,7 +5,6 @@ import main.java.com.framework.configuration.model.serialization.*;
 import main.java.com.framework.serialization.*;
 import main.java.com.framework.test.model.*;
 import main.java.com.framework.test.selenium.*;
-import org.openqa.selenium.NotFoundException;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +19,7 @@ public class ExecutionContext {
     private final Path resultFilePath;
 
     private final TestGroupSerializer testPlanSettingsSerializer;
-    private final TestGroup testPlanSettings;
+    private final TestPlan testPlanSettings;
 
     private final ConfigurationManager configurationManager;
     private final WebDriverManager webDriverManager;
@@ -45,10 +44,10 @@ public class ExecutionContext {
         this.webDriverManager.startWebDriver();
     }
 
-    /***
-     * This method needs to be replaced by a proper dependency injection strategy
-     * @return
-     */
+    public TestPlan getTestPlan() {
+        return this.testPlanSettings;
+    }
+
     public synchronized static ExecutionContext getCurrent() {
         if (ExecutionContext.current == null)
             ExecutionContext.current = new ExecutionContext(
@@ -59,10 +58,6 @@ public class ExecutionContext {
                     new TestGroupSerializer(ObjectSerializer.DataFormat.JSON));
 
         return ExecutionContext.current;
-    }
-
-    public TestGroup getTestPlan() {
-        return this.testPlanSettings;
     }
 
     public void setTestFieldValue(TestStep testStep, String key, String value) {

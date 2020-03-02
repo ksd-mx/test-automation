@@ -2,6 +2,7 @@ package main.java.com.framework.configuration.model.serialization;
 
 import main.java.com.framework.serialization.ObjectSerializer;
 import main.java.com.framework.test.model.TestGroup;
+import main.java.com.framework.test.model.TestPlan;
 
 import java.io.IOException;
 
@@ -12,13 +13,13 @@ public class TestGroupSerializer {
         this.objectSerializer = ObjectSerializer.createSerializer(format);
     }
 
-    public TestGroup retrieve(String fileName, boolean create) {
-        TestGroup result = null;
+    public TestPlan retrieve(String fileName, boolean create) {
+        TestPlan result = null;
         try {
             System.out.println(String.format("Reading execution settings from file %s", fileName));
-            result = (TestGroup) this.objectSerializer
+            result = (TestPlan) this.objectSerializer
                     .ReadSettingsFromFile(
-                            TestGroup.class,
+                            TestPlan.class,
                             fileName);
         } catch (IOException e) {
             if (create) {
@@ -32,7 +33,7 @@ public class TestGroupSerializer {
         }
     }
 
-    public void save(TestGroup testPlan, String filename) {
+    public void save(TestPlan testPlan, String filename) {
         try {
             System.out.println(String.format("Saving execution results to file %s", filename));
             this.objectSerializer
