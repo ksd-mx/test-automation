@@ -17,7 +17,7 @@ public class LaboratoryTest extends DefaultTestImpl {
     private final IStepStrategy sumStepImpl2;
 
     public LaboratoryTest() throws Throwable {
-        super(ExecutionContext.getCurrent().getTestPlan().getTestCase("6309"));
+        super(ExecutionContext.getCurrent().getTestPlan().getTestCase("4605"));
 
         this.sumStep1 = this.getTestCase().getTestStep("0");
         this.sumStep2 = this.getTestCase().getTestStep("1");
