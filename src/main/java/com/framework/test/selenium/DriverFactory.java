@@ -13,7 +13,7 @@ public class DriverFactory {
 
         switch (driverType) {
             case CHROME:
-                System.setProperty("webdriver.chrome.driver", "src//main//resources//chromedriver");
+                System.setProperty("webdriver.chrome.driver", "src//main//resources//chromedriver.exe");
                 DesiredCapabilities dr = DesiredCapabilities.chrome();
                 ChromeOptions options = new ChromeOptions();
                 options.addArguments(
