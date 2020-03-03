@@ -22,10 +22,11 @@ class TestPlan {
     [TestCase[]] $testCaseList
 }
 
-$auth_header = @{
-    Authorization = 'Basic ' + `
-        [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$(${env:TEST_AUTOMATION_ACCESS_TOKEN})"))
-}
+
+$token = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$(${env:TEST_AUTOMATION_ACCESS_TOKEN})"))
+
+$auth_header = @{ Authorization="Basic ${token}" }
+
 $now = [System.DateTime]::Now
 Write-Host "Starting at ${now}"
 
@@ -146,11 +147,19 @@ Function GetTestCaseSteps
         $parenttestcase.testStepList += $newtestcasestep
     }
 }
+Write-Host $token
+
+($auth_header | ConvertTo-Json -Depth 100)
 
 Write-Host "Invoking TEST PLAN API: ${testplan_uri}"
-$remotetestplan = Invoke-RestMethod -Uri "${testplan_uri}" -Method Get -Headers $auth_header
+$remotetestplan = Invoke-RestMethod `
+    -Uri "${testplan_uri}" `
+    -Method Get `
+    -Headers $auth_header `
+    -ContentType "application/json" `
+    -UseBasicParsing
 
-($remotetestplan | ConvertTo-Json -depth 100 | Out-String)
+if ($null -eq $remotetestplan.rootSuite.id) { exit }
 
 Write-Host ">>> ROOT SUITE FOUND: "$remotetestplan.rootSuite.id
 $testplan_group.externalId = $remotetestplan.rootSuite.id
