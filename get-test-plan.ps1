@@ -27,8 +27,6 @@ $auth_header = @{
         [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$(${env:TEST_AUTOMATION_ACCESS_TOKEN})"))
 }
 
-($auth_header | ConvertTo-Json)
-
 $now = [System.DateTime]::Now
 Write-Host "Starting at ${now}"
 
@@ -160,7 +158,10 @@ $testplan_group.externalId = $remotetestplan.rootSuite.id
 Write-Host "Starting TEST PLAN ${testplan} serialization"
 GetChildSuite -suiteid $testplan_group.externalId
 
+($testplan_group | ConvertTo-Json -depth 100)
+
 $testplan_group | ConvertTo-Json -depth 100 | Out-File $result_filename
+Write-Host "Results written to ${result_filename} successfully!"
 
 $now = [System.DateTime]::Now
 Write-Host "Finishing at ${now}"

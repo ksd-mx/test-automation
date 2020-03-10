@@ -22,6 +22,8 @@ public class TestGroupSerializer {
                             TestPlan.class,
                             fileName);
         } catch (IOException e) {
+            System.out.println(String.format("Failed reading %s", fileName));
+            e.printStackTrace();
             if (create) {
                 this.objectSerializer.WriteSettingsToFile(
                         result,

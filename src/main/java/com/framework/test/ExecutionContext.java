@@ -37,8 +37,6 @@ public class ExecutionContext {
         this.testPlanSettingsSerializer = testPlanSettingsSerializer;
         this.testPlanSettings = this.testPlanSettingsSerializer.retrieve(TESTRUN_SETTINGS_FILEPATH, false);
 
-        this.testPlanSettingsSerializer.save(this.testPlanSettings, "testing.json");
-
         Runtime.getRuntime().addShutdownHook(new Thread(this::onExitRuntime));
 
         this.webDriverManager.startWebDriver();

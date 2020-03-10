@@ -7,12 +7,12 @@ $auth_header = @{
 }
 
 $contenttype = 'application/json'
-$base_uri = "${env:SYSTEM_COLLECTIONURI}/_apis"
+$base_uri = "${env:SYSTEM_COLLECTIONURI}${env:SYSTEM_TEAMPROJECTID}/_apis"
 $base_test_uri = "${base_uri}/test"
 $api51_version = "?api-version=5.1"
 $testrun_base_uri = "${base_test_uri}/runs"
 
-$testplan_result = (Get-Content "${env:TESTRESULT_PATH}//${env:TESTPLAN_FILENAME}" | Out-String | ConvertFrom-Json)
+$testplan_result = (Get-Content "${env:TESTRESULT_PATH}//${env:TESTRESULT_FILENAME}" | Out-String | ConvertFrom-Json)
 
 $messagebody = @{
     updateRequests = @();
@@ -26,6 +26,7 @@ foreach ($item in $testplan_result.testCaseList)
 
     $testpoints_uri = "${base_test_uri}/plans/${env:TESTPLAN_ID}/suites/${suiteid}/points${api51_version}&testCaseId=${testCaseId}"
 
+    Write-Host "Preparing to read from TEST POINT API: ${testpoints_uri}"
     $testpoints_result = Invoke-RestMethod `
         -Uri "$testpoints_uri" `
         -Method Get `
@@ -35,7 +36,12 @@ foreach ($item in $testplan_result.testCaseList)
     $run_id = $testpoints_result.value.lastTestRun.id
     $result_id = $testpoints_result.value.lastResult.id
 
-    if ($run_id -eq 0 -or $result_id -eq 0) { continue }
+    if ($run_id -eq 0 -or $result_id -eq 0)
+    {
+        Write-Host "The TEST CASE ${testCaseId} has no testpoint information."
+        ($testpoints_result | ConvertTo-Json -depth 100 | Out-String)
+        continue
+    }
 
     $result_uri = "${testrun_base_uri}/${run_id}/results/${result_id}${api51_version}"
 
@@ -109,7 +115,12 @@ foreach ($item in $testplan_result.testCaseList)
     }
 }
 
+Write-Host "MESSAGE:"
+($messagebody | ConvertTo-Json -depth 100 | Out-String)
+
 $tesuris = "${env:SYSTEM_COLLECTIONURI}/_api/_testresult/Update?teamId=&__v=5"
+
+Write-Host "Preparing to send results to API: ${tesuris}"
 
 $new_result = Invoke-RestMethod `
     -Uri "$tesuris" `
@@ -119,7 +130,7 @@ $new_result = Invoke-RestMethod `
     -Body ($messagebody | ConvertTo-Json -depth 100 | Out-String) `
     -ContentType $contenttype
 
-($messagebody | ConvertTo-Json -depth 100 | Out-String)
+Write-Host "RESULT:"
 ($new_result | ConvertTo-Json -depth 100 | Out-String)
 
 $now = [System.DateTime]::Now
