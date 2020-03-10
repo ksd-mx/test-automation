@@ -34,6 +34,8 @@ public class LaboratoryTest extends DefaultTestImpl {
     @Test()
     public void shouldFailSummingTwoNumbers() {
         this.sumStepImpl2.execute();
+
         Assert.assertNotEquals(new Laboratory().sumTwoNumbersFail(1, 1), 2, "Something went wrong!");
+        
     }
 }

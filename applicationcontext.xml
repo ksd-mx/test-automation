@@ -8,22 +8,4 @@
     <bean id="webDriverManager" class="main.java.com.framework.configuration.model.serialization.WebDriverManager" >
         <constructor-arg value="CHROME" type="main.java.com.framework.test.selenium.DriverFactory.DriverType" />
     </bean>
-    <bean id="applicationSettingsSerializer" class="main.java.com.framework.configuration.model.serialization.ApplicationSettingsSerializer" >
-        <constructor-arg value="YAML" type="main.java.com.framework.serialization.ObjectSerializer.DataFormat" />
-    </bean>
-    <bean id="fieldSettingsSerializer" class="main.java.com.framework.configuration.model.serialization.FieldSettingsSerializer">
-        <constructor-arg value="JSON" type="main.java.com.framework.serialization.ObjectSerializer.DataFormat" />
-    </bean>
-    <bean id="testPlanSerializer" class="main.java.com.framework.configuration.model.serialization.TestGroupSerializer">
-        <constructor-arg value="JSON" type="main.java.com.framework.serialization.ObjectSerializer.DataFormat" />
-    </bean>
-    <bean id="configurationManager" class="main.java.com.framework.configuration.ConfigurationManager">
-        <constructor-arg ref="applicationSettingsSerializer" />
-        <constructor-arg ref="fieldSettingsSerializer" />
-    </bean>
-    <bean id="executionContext" class="main.java.com.framework.test.ExecutionContext">
-        <constructor-arg ref="configurationManager" />
-        <constructor-arg ref="webDriverManager" />
-        <constructor-arg ref="testPlanSerializer" />
-    </bean>
 </beans>

@@ -75,7 +75,7 @@ foreach ($item in $testplan_result.testCaseList)
             planId = $env:TESTPLAN_ID;
 #            configurationId = 9;
 #            state = 1;
-            testCaseTitle = "01.02.10 Ajuste do c�lculo da reserva (loss) - The current reserve is higher than loss value";
+            testCaseTitle = $result.testCaseTitle;
 #            outcome = 2;
             testCaseId = $item.externalId;
             runBy = $result.runBy.id;

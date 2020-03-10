@@ -26,6 +26,9 @@ $auth_header = @{
     Authorization = 'Basic ' + `
         [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$(${env:TEST_AUTOMATION_ACCESS_TOKEN})"))
 }
+
+($auth_header | ConvertTo-Json)
+
 $now = [System.DateTime]::Now
 Write-Host "Starting at ${now}"
 
@@ -125,7 +128,8 @@ Function GetTestCaseSteps
     {
         $stepparams = $param_rgx.Matches($match)
 
-        $step_action = $stepparams[0] -replace '<parameterizedString\s[a-zA-Z0-9="]+>' `
+        $step_action = $stepparams[0] `
+            -replace '<parameterizedString\s[a-zA-Z0-9="]+>' `
             -replace '<\/parameterizedString>' `
             -replace '\s+', ' '
 
@@ -150,9 +154,7 @@ Function GetTestCaseSteps
 Write-Host "Invoking TEST PLAN API: ${testplan_uri}"
 $remotetestplan = Invoke-RestMethod -Uri "${testplan_uri}" -Method Get -Headers $auth_header
 
-($remotetestplan | ConvertTo-Json -depth 100 | Out-String)
-
-Write-Host ">>> ROOT SUITE FOUND: "$remotetestplan.rootSuite.id
+Write-Host "ROOT SUITE FOUND: "$remotetestplan.rootSuite.id
 $testplan_group.externalId = $remotetestplan.rootSuite.id
 
 Write-Host "Starting TEST PLAN ${testplan} serialization"
