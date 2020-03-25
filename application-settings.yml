@@ -2,3 +2,11 @@
 seleniumDriverType: "CHROME"
 serializerDataFormat: "JSON"
 resultPath: "target//test-automation-results//"
+
+#automation tag
+automationTag: "data-testautomation"
+
+#generic assert messages
+assertMessages:
+  StringAssertMessage: "Element with %s \"%s\" does not have the expected text:\nActual:%s\nExpected:%s\n"
+  ElementNotFoundMessage: "Element not found: \"%s\" not found by %s: \"%s\""

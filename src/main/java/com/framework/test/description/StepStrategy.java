@@ -15,19 +15,15 @@ public abstract class StepStrategy implements IStepStrategy {
         this.step = step;
     }
 
-    public final void execute() {
-        try {
-            this.executionContext.takeScreenshot(this.step, "BEFORE");
-            this.step.setStart(LocalDateTime.now().toString());
-            this.onExecute();
-            this.step.setFinish(LocalDateTime.now().toString());
-            this.executionContext.takeScreenshot(this.step, "AFTER");
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
+    public final void execute() throws Throwable{
+        this.executionContext.takeScreenshot(this.step, "BEFORE");
+        this.step.setStart(LocalDateTime.now().toString());
+        this.onExecute();
+        this.step.setFinish(LocalDateTime.now().toString());
+        this.executionContext.takeScreenshot(this.step, "AFTER");
     }
 
-    public abstract void onExecute();
+    public abstract void onExecute() throws Throwable;
 
     protected void setOutputValue(String key, String value) {
         this.step.getTestCase().getOutputValueList().put(key, value);
