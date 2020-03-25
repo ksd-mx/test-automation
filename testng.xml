@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite_1234" verbose="1" configfailurepolicy="continue">
+    <test name="TestingNewRunner" preserve-order="true">
+        <classes>
+            <class name="test.java.com.laboratory.test.LaboratoryTest">
+                <methods>
+                    <include name="shouldPassSummingTwoNumbers" description="Should Pass Summing Two Numbers" />
+                    <include name="shouldFailSummingTwoNumbers" description="Should Fail Summing Two Numbers" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
