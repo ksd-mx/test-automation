@@ -32,3 +32,13 @@ hs_err_pid*
 **/surefire-reports/
 old
 set_env.sh
+
+# ignore testng.xml (example is already in the repository)
+testng.xml
+execution-context.json
+field-settings.yml
+src/test/java/com/laboratory/test/ContratoNovo_Test.java
+src/test/java/com/laboratory/test/implementation/sharedsteps/LoginStep.java
+src/test/java/com/laboratory/test/implementation/testcases/CriarContrato/AssertSalvarButtonStep.java
+src/test/java/com/laboratory/test/implementation/testcases/CriarContrato/CadastrarInformacoesGeraisStep.java
+src/test/java/com/laboratory/test/implementation/testcases/CriarContrato/ClickNewContractButtonStep.java
