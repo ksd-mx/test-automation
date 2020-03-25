@@ -41,7 +41,7 @@ public class WebDriverManager {
     }
 
     public WebElement getElementByTag(String tag, String value) throws NoSuchElementException{
-        List<WebElement> elements = this.driver.findElements(By.xpath("//input[contains(@" + tag + ", \"" + value + "\")]"));
+        List<WebElement> elements = this.driver.findElements(By.xpath("//*[contains(@" + tag + ", \"" + value + "\")]"));
         for(WebElement element: elements){
             if(element.getAttribute(tag).equals(value)){
                 return element;

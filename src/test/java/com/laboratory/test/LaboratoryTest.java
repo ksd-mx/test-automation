@@ -27,12 +27,12 @@ public class LaboratoryTest extends DefaultTestImpl {
     }
 
     @Test()
-    public void shouldPassSummingTwoNumbers() {
+    public void shouldPassSummingTwoNumbers() throws Throwable{
         this.sumStepImpl1.execute();
     }
 
     @Test()
-    public void shouldFailSummingTwoNumbers() {
+    public void shouldFailSummingTwoNumbers() throws Throwable {
         this.sumStepImpl2.execute();
 
         Assert.assertNotEquals(new Laboratory().sumTwoNumbersFail(1, 1), 2, "Something went wrong!");

@@ -39,6 +39,7 @@ execution-context.json
 field-settings.yml
 src/test/java/com/laboratory/test/ContratoNovo_Test.java
 src/test/java/com/laboratory/test/implementation/sharedsteps/LoginStep.java
-src/test/java/com/laboratory/test/implementation/testcases/CriarContrato/AssertSalvarButtonStep.java
-src/test/java/com/laboratory/test/implementation/testcases/CriarContrato/CadastrarInformacoesGeraisStep.java
-src/test/java/com/laboratory/test/implementation/testcases/CriarContrato/ClickNewContractButtonStep.java
+src/test/java/com/laboratory/test/implementation/steps/CriarContrato/AssertSalvarButtonStep.java
+src/test/java/com/laboratory/test/implementation/steps/CriarContrato/CadastrarInformacoesGeraisStep.java
+src/test/java/com/laboratory/test/implementation/steps/CriarContrato/ClickNewContractButtonStep.java
+/src/test/java/com/laboratory/test/implementation/testcases/CadastroContrato/CriarContratoTC.java

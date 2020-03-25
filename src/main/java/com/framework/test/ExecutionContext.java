@@ -5,14 +5,19 @@ import main.java.com.framework.configuration.model.serialization.ApplicationSett
 import main.java.com.framework.configuration.model.serialization.FieldSettingsSerializer;
 import main.java.com.framework.configuration.model.serialization.TestGroupSerializer;
 import main.java.com.framework.serialization.ObjectSerializer;
+import main.java.com.framework.test.model.PathType;
 import main.java.com.framework.test.model.TestField;
 import main.java.com.framework.test.model.TestPlan;
 import main.java.com.framework.test.model.TestStep;
 import main.java.com.framework.test.selenium.DriverFactory;
 import main.java.com.framework.test.selenium.WebDriverManager;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+
 
 public class ExecutionContext {
     // Singleton instance backing property
@@ -88,6 +93,9 @@ public class ExecutionContext {
 
         System.out.println(String.format("Saving screenshot to %s", filePath.toString()));
 
+        if(filePath.toFile().exists())
+            filePath.toFile().delete();
+
         this.webDriverManager.getScreenShot(filePath.toString());
 
         testStep.getScreenshotList().add(filePath.toString());
@@ -112,11 +120,42 @@ public class ExecutionContext {
         }
     }
 
-    public WebDriverManager getWebDriverManager() {
-        return webDriverManager;
+    public WebElement getWebElement(String key, String expectedString) throws Throwable{
+        TestField testField = this.configurationManager.getFieldSettings().get(key);
+        if(testField == null)
+            throw new NullPointerException("Cannot find TestField with the key: " + key);
+
+        PathType pathType = testField.getPathType();
+        String methodName;
+        WebElement webElement = null;
+        switch(pathType){
+            case XPATH:
+                webElement = webDriverManager.getElementByXpath(testField.getPath());
+                methodName = "getPath";
+                break;
+            case TAG:
+                webElement = webDriverManager.getElementByTag(this.configurationManager.getApplicationSettings().getAutomationTag(), testField.getValue());
+                methodName = "getValue";
+                break;
+            default:
+                return webElement;
+        }
+
+        if(expectedString != null){
+            String assertMessage = this.configurationManager.getApplicationSettings().getAssertMessages().get("StringAssertMessage");
+            assertMessage = String.format(assertMessage, testField.getPathType().name(),
+                    TestField.class.getMethod(methodName).invoke(testField), webElement.getText().trim(),expectedString.trim());
+            Assert.assertEquals(webElement.getText().trim(), expectedString.trim(), assertMessage);
+        }
+        return webElement;
     }
 
-    public ConfigurationManager getConfigurationManager() {
-        return configurationManager;
+    public void navigateToPage(String url){
+        this.webDriverManager.navigateToPage(url);
     }
+
+    public void clickOnElement(WebElement webElement) throws Throwable{
+        this.webDriverManager.clickElement(webElement);
+    }
+
 }

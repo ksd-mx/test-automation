@@ -21,6 +21,7 @@ public class ApplicationSettingsSerializer {
                             ApplicationSettings.class,
                             fileName);
         } catch (IOException e) {
+            e.printStackTrace();
             if (create) {
                 this.objectSerializer.WriteSettingsToFile(
                         result,

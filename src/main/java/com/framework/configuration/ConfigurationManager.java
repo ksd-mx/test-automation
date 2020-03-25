@@ -21,11 +21,14 @@ public final class ConfigurationManager {
         this.applicationSettingsSerializer = applicationSettingsSerializer;
         this.fieldSettingsSerializer = fieldSettingsSerializer;
 
-        this.applicationSettings = applicationSettingsSerializer.retrieve(APPLICATION_SETTINGS_FILEPATH, true);
-        this.fieldSettings = fieldSettingsSerializer.retrieve(FIELD_SETTINGS_FILEPATH, true);
+        this.applicationSettings = applicationSettingsSerializer.retrieve(APPLICATION_SETTINGS_FILEPATH, false);
+        this.fieldSettings = fieldSettingsSerializer.retrieve(FIELD_SETTINGS_FILEPATH, false);
     }
 
     public ApplicationSettings getApplicationSettings() {
+        if(applicationSettings!=null)
+            return this.applicationSettings;
+
         return this.getApplicationSettings(ConfigurationManager.APPLICATION_SETTINGS_FILEPATH);
     }
 
@@ -39,6 +42,9 @@ public final class ConfigurationManager {
     }
 
     public FieldSettings getFieldSettings() {
+        if(fieldSettings!=null)
+            return this.fieldSettings;
+
         return this.getFieldSettings(ConfigurationManager.FIELD_SETTINGS_FILEPATH);
     }
 
