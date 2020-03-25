@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class WebDriverManager {
@@ -30,4 +31,27 @@ public class WebDriverManager {
     public void stopWebDriver() {
         this.driver.quit();
     }
+
+    public WebElement getElementByXpath(String xpath){
+        return this.driver.findElement(By.xpath(xpath));
+    }
+
+    public void navigateToPage(String url){
+        this.driver.navigate().to(url);
+    }
+
+    public WebElement getElementByTag(String tag, String value) throws NoSuchElementException{
+        List<WebElement> elements = this.driver.findElements(By.xpath("//input[contains(@" + tag + ", \"" + value + "\")]"));
+        for(WebElement element: elements){
+            if(element.getAttribute(tag).equals(value)){
+                return element;
+            }
+        }
+        throw new NoSuchElementException("Cannot find element with the pair tag: \"" + tag + "\" and value: \"" + value + "\"");
+    }
+
+    public void clickElement(WebElement element){
+        element.click();
+    }
+
 }

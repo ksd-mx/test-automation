@@ -1,10 +1,15 @@
 package main.java.com.framework.test;
 
-import main.java.com.framework.configuration.*;
-import main.java.com.framework.configuration.model.serialization.*;
-import main.java.com.framework.serialization.*;
-import main.java.com.framework.test.model.*;
-import main.java.com.framework.test.selenium.*;
+import main.java.com.framework.configuration.ConfigurationManager;
+import main.java.com.framework.configuration.model.serialization.ApplicationSettingsSerializer;
+import main.java.com.framework.configuration.model.serialization.FieldSettingsSerializer;
+import main.java.com.framework.configuration.model.serialization.TestGroupSerializer;
+import main.java.com.framework.serialization.ObjectSerializer;
+import main.java.com.framework.test.model.TestField;
+import main.java.com.framework.test.model.TestPlan;
+import main.java.com.framework.test.model.TestStep;
+import main.java.com.framework.test.selenium.DriverFactory;
+import main.java.com.framework.test.selenium.WebDriverManager;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +28,8 @@ public class ExecutionContext {
 
     private final ConfigurationManager configurationManager;
     private final WebDriverManager webDriverManager;
+
+    //TODO: Create an ExcelManager to work as a plugin much like WebDriverManager
 
     private ExecutionContext(
             ConfigurationManager configurationManager,
@@ -60,14 +67,11 @@ public class ExecutionContext {
 
     public void setTestFieldValue(TestStep testStep, String key, String value) {
         if (this.configurationManager.getFieldSettings() != null) {
-            for (TestField field : this.configurationManager.getFieldSettings()) {
-                if (field.getKey().equals(key)) {
-                    field.setValue(value);
+            TestField testField = this.configurationManager.getFieldSettings().get(key);
+            testField.setValue(value);
 
-                    if (!testStep.getTestFieldList().contains(testStep))
-                        testStep.getTestFieldList().add(field);
-                }
-            }
+            if (!testStep.getTestFieldList().contains(testStep))
+                testStep.getTestFieldList().add(testField);
         }
     }
 
@@ -106,5 +110,13 @@ public class ExecutionContext {
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
+    }
+
+    public WebDriverManager getWebDriverManager() {
+        return webDriverManager;
+    }
+
+    public ConfigurationManager getConfigurationManager() {
+        return configurationManager;
     }
 }
