@@ -3,10 +3,9 @@
 <suite name="Suite_1234" verbose="1" configfailurepolicy="continue">
     <test name="TestingNewRunner" preserve-order="true">
         <classes>
-            <class name="test.java.com.laboratory.test.LaboratoryTest">
+            <class name="test.implementation.DemonstrationTestSuite">
                 <methods>
-                    <include name="shouldPassSummingTwoNumbers" description="Should Pass Summing Two Numbers" />
-                    <include name="shouldFailSummingTwoNumbers" description="Should Fail Summing Two Numbers" />
+                    <include name="ExampleTestCaseInvocationTest" />
                 </methods>
             </class>
         </classes>

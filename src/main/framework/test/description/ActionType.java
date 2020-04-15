@@ -1,0 +1,17 @@
+package main.framework.test.description;
+
+public enum ActionType {
+    AUTHENTICATE,
+    NAVIGATE,
+    ASSIGN,
+    TAKE_SCREENSHOT,
+    DATASOURCE_ASSIGN,
+    READ,
+    CLICK,
+    CONFIRM_EXISTENCE,
+    CONFIRM_ASSIGNMENT,
+    CONFIRM_MATCH,
+    WAITVISIBLE,
+    ENSUREPAGELOADED,
+    WAITINVISIBLE
+}

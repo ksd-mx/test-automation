@@ -1,4 +1,0 @@
----
-seleniumDriverType: "CHROME"
-serializerDataFormat: "JSON"
-resultPath: "target//test-automation-results//"
